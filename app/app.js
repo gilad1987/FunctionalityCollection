@@ -1,11 +1,6 @@
 import 'assets/stylesheets/scss/application.scss';
 
 
-
-
-
-
-
 // import GtEventManager from 'components/gt-event-manager/GtEventManager';
 // import { GtFunctionalityCollection, GtState } from 'components/GtFunctionalityCollection';
 //

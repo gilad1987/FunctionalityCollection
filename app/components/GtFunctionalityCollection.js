@@ -2,8 +2,7 @@ import { GtEvent } from './GtEvent';
 
 export class GtFunctionalityCollection extends GtEvent{
 
-    constructor(GtEventManager){
-        this.eventManager = new GtEventManager();
+    constructor(){
         this.states = {};
         this.isEnabled = true;
     }
@@ -11,12 +10,12 @@ export class GtFunctionalityCollection extends GtEvent{
     getAllState(){}
 
     subscribe(actionType, handler, context, target){
-        this.eventManager.on(actionType, handler, context, target);
+        this.on(actionType, handler, context, target);
         return this;
     }
 
     unSubscribe(actionType, handler){
-        this.eventManager.off(actionType, handler);
+        this.off(actionType, handler);
         return this;
     }
 
@@ -25,7 +24,7 @@ export class GtFunctionalityCollection extends GtEvent{
     }
 
     triggerAction(actionType){
-        this.eventManager.trigger(actionType);
+        this.trigger(actionType);
         return this;
     }
     
