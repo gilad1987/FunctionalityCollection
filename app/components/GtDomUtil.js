@@ -1,4 +1,4 @@
-export class GtDom{
+export class GtDomUtil{
     constructor(){
         
     }
