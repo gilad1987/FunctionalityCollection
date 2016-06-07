@@ -1,5 +1,6 @@
 import 'assets/stylesheets/scss/application.scss';
 
+import 'components/text.html';
 
 // import GtEventManager from 'components/gt-event-manager/GtEventManager';
 // import { GtFunctionalityCollection, GtState } from 'components/GtFunctionalityCollection';

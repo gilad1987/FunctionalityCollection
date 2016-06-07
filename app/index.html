@@ -14,13 +14,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Functionality collection</title>
-
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700,700italic,900,100italic,300,300italic' rel='stylesheet' type='text/css'>
-
 </head>
 <body>
 
 <h1>Functionality collection</h1>
+
+
+<div id="GtTextEditor" class="GtTextEditor active">
+    <div class="input" >
+        <div class="ToolBar">
+            <div class="ButtonGroup">
+                <button class="Button" type="button"
+                        data-actionType="toggleBold"
+                        ng-class="{'active':gtTextEditor.isBold}"
+                        ng-click="gtTextEditor.toggleBold()">
+                    b
+                </button>
+
+                <button class="Button"
+                        type="button"
+                        data-actionType="toggleUnderscore"
+                        ng-class="{'active':gtTextEditor.isUnderscore}"
+                        ng-click="gtTextEditor.toggleUnderscore()">
+                    u
+                </button>
+
+                <button class="Button"
+                        type="button"
+                        data-actionType="toggleItalic"
+                        ng-class="{'active':gtTextEditor.isItalic}"
+                        ng-click="gtTextEditor.toggleItalic()">
+                    i
+                </button>
+            </div>
+        </div>
+
+        <div class="content" id="content" contenteditable="true" ></div>
+
+
+    </div>
+</div>
 
 </body>
 </html>

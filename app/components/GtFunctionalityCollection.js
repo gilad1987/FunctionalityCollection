@@ -21,6 +21,7 @@ export class GtFunctionalityCollection extends GtEvent{
 
     addAction(state){
         this.states[state.actionType] = state;
+        return this;
     }
 
     triggerAction(actionType){
@@ -49,4 +50,3 @@ export class GtFunctionalityCollection extends GtEvent{
     }
     
 }
-

@@ -47,5 +47,3 @@ export class GtState extends GtEvent{
 
     }
 }
-
-

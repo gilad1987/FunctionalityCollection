@@ -9,7 +9,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const appPath           = path.join(__dirname, 'app');
 const distPath          = path.join(__dirname, 'dist');
 const exclude           = /node_modules/;
-const EnableExtractTextPlugin    = false;
+const EnableExtractTextPlugin    = true;
 
 function getENVReplacements() {
   const replacements = {}; //environmentsFile[process.env.NODE_ENV];
@@ -124,7 +124,7 @@ const config = {
     contentBase: './app',
     colors: true,
     noInfo: true,
-    inline: false,
+    inline: true,
     historyApiFallback: true
   }
 
