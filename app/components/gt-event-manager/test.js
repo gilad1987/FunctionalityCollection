@@ -1,4 +1,4 @@
-import GtEventManager from 'components/GtEventManager/GtEventManager';
+import GtEventManager from 'components/gt-event-manager/GtEventManager';
 
 let events = new GtEventManager();
 let i=1;

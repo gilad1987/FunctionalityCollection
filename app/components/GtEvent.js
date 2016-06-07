@@ -1,4 +1,4 @@
-class GtEventManager{
+export class GtEvent{
 
     constructor(){
         /**
@@ -6,6 +6,7 @@ class GtEventManager{
          * @type {Map}
          * @private
          */
+
         this._eventsMap = new Map();
     }
 
@@ -15,7 +16,7 @@ class GtEventManager{
      * @param handler
      * @param context
      * @param target
-     * @returns {GtEventManager}
+     * @returns {GtEvent}
      */
     on(eventName, handler, context, target){
         if(typeof handler != 'function'){
@@ -145,4 +146,3 @@ class GtEventManager{
     }
 }
 
-export default GtEventManager;

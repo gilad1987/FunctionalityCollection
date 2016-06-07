@@ -37,6 +37,7 @@
     "file-loader": "0.8.4",
     "html-loader": "0.3.0",
     "html-webpack-plugin": "1.6.1",
+    "jasmine-core": "2.4.1",
     "json-loader": "0.5.3",
     "karma": "0.13.12",
     "karma-chrome-launcher": "0.2.1",
