@@ -8,6 +8,7 @@ export class GtEvent{
          */
 
         this._eventsMap = new Map();
+
     }
 
     /**

@@ -8,34 +8,40 @@ export class GtToolbar  extends GtDomUtil{
 
     /**
      * @param { GtFunctionalityCollection } stateCollection
-     * @param {Element} [toolbarElement]
+     * @param {Element} [editorElement]
      */
-    constructor(stateCollection, toolbarElement){
+    constructor(stateCollection, editorElement){
         super();
         this.stateCollection = stateCollection;
-        if(toolbarElement){
-            this.render(toolbarElement);
+        if(editorElement){
+            this.render(editorElement);
         }
     }
     
     /**
-     * @param {Element} toolbarElement
+     * @param {Element} editorElement
      * @param {Array} [groupStates]
      * @returns {GtToolbar}
      */
-    render(toolbarElement,groupStates){
+    render(editorElement,groupStates){
         let group = this.createNewNode('div',null,'ButtonGroup'),
+            toolbarElement = this.createNewNode('div',null,'ToolBar'),
             frag = document.createDocumentFragment(),
             state;
 
+        //#TODO implement for groupStates
+
         for(state in this.stateCollection.states){
             if(this.stateCollection.states.hasOwnProperty(state)){
-                
+
                 let button,
                     stateInstance = this.stateCollection.states[state],
-                    dataValue = stateInstance['actionType'],
-                    dataset = { 'actionType' : dataValue};
+                    dataset = {
+                        'actionType' : stateInstance['actionType']
+                    };
 
+                //#TODO add title to button (ask Yuval where put the data)
+                
                 button = this.createNewNode('button',null, 'Button',null,dataset,stateInstance['iconHtml'],{'type':'button'});
                 button.addEventListener('click',function(){
                     stateInstance.action();
@@ -45,10 +51,10 @@ export class GtToolbar  extends GtDomUtil{
             }
         }
 
-        frag.appendChild(group);
+        toolbarElement.appendChild(group);
+        frag.appendChild(toolbarElement);
 
-        toolbarElement.innerHTML = '';
-        toolbarElement.appendChild(frag);
+        editorElement.appendChild(frag);
 
         return this;
     }

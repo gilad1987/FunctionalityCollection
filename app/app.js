@@ -27,9 +27,8 @@ let editor = new GtEditor(editorStateCollection);
 
 
 document.addEventListener('DOMContentLoaded',()=>{
-  let toolbarElement = document.getElementById('tool-bar');
-  let editorElement = document.getElementById('editor-content');
-  toolbar.render(toolbarElement);
+  let editorElement = document.getElementById('GtTextEditor');
+  toolbar.render(editorElement);
   editor.render(editorElement);
 });
 
