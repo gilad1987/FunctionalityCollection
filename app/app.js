@@ -1,10 +1,40 @@
 import 'assets/stylesheets/scss/application.scss';
 
-import 'components/text.html';
 
-// import GtEventManager from 'components/gt-event-manager/GtEventManager';
-// import { GtFunctionalityCollection, GtState } from 'components/GtFunctionalityCollection';
-//
+import { GtFunctionalityCollection } from 'components/GtFunctionalityCollection';
+import { GtState } from 'components/GtState';
+import { GtEditor } from 'components/GtEditor';
+import { GtToolbar } from 'components/GtToolbar';
+
+
+let states = {};
+states['toggleBold'] = new GtState('toggleBold',true,true,'font-weight',400,'bold','b');
+states['toggleUnderline'] = new GtState('toggleUnderline',true,true,'text-decoration','underline','italic','u');
+states['toggleItalic'] = new GtState('toggleItalic',true,true,'font-style','italic','italic','i');
+
+let toolbarStateCollection = new GtFunctionalityCollection();
+toolbarStateCollection.addAction(states['toggleBold']);
+toolbarStateCollection.addAction(states['toggleUnderline']);
+toolbarStateCollection.addAction(states['toggleItalic']);
+let toolbar = new GtToolbar(toolbarStateCollection);
+
+
+let editorStateCollection = new GtFunctionalityCollection();
+editorStateCollection.addAction(states['toggleBold']);
+editorStateCollection.addAction(states['toggleUnderline']);
+editorStateCollection.addAction(states['toggleItalic']);
+let editor = new GtEditor(editorStateCollection);
+
+
+document.addEventListener('DOMContentLoaded',()=>{
+  let toolbarElement = document.getElementById('tool-bar');
+  let editorElement = document.getElementById('editor-content');
+  toolbar.render(toolbarElement);
+  editor.render(editorElement);
+});
+
+
+
 // let fc = new GtFunctionalityCollection(GtEventManager);
 // let state = new GtState('toggleBold');
 // state.setOptions(true,true,'font-weight',500,'bold');

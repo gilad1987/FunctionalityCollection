@@ -1,16 +1,43 @@
 import { GtEvent } from './GtEvent';
 
+/**
+ * @date 8.7.2016
+ * @author Gilad Takoni
+ */
 export class GtState extends GtEvent{
 
-    constructor(actionType,on,enabled,styleKey,styleValue,className){
+    /**
+     * 
+     * @param actionType
+     * @param on
+     * @param enabled
+     * @param styleKey
+     * @param styleValue
+     * @param className
+     * @param iconHtml
+     */
+    constructor(actionType,on,enabled,styleKey,styleValue,className,iconHtml){
+        super();
         this.actionType = actionType;
         this._isOn = on;
         this._isEnabled = enabled;
         this.className = className;
         this.styleKey = styleKey;
         this.styleValue = styleValue;
+        this.reasonCount = 0;
+        this.iconHtml = iconHtml;
     }
 
+    subscribe(handler){
+        this.on(this.actionType, handler);
+        return this;
+    }
+
+    unSubscribe(handler){
+        this.off(this.actionType, handler);
+        return this;
+    }
+    
     isOn(){
         return this._isOn;
     }
@@ -40,7 +67,9 @@ export class GtState extends GtEvent{
     }
 
     action() {
-        this.trigger("action", this.actionType);
+
+        console.log('fire action: '+this.actionType);
+        this.trigger(this.actionType);
     }
 
     addObjection(){

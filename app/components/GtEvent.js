@@ -2,7 +2,7 @@ export class GtEvent{
 
     constructor(){
         /**
-         * Mapping of all event as subscribe in the instance
+         * @desc Mapping of all event as subscribe in the instance
          * @type {Map}
          * @private
          */
@@ -11,7 +11,7 @@ export class GtEvent{
     }
 
     /**
-     * Subscribe to event.
+     * @desc Subscribe to event.
      * @param eventName
      * @param handler
      * @param context
@@ -75,10 +75,10 @@ export class GtEvent{
 
 
     /**
-     * Remove subscribe function
+     * @desc Remove subscribe function
      * @param eventName
      * @param handler
-     * @returns {GtEventManager}
+     * @returns {GtEvent}
      */
     off(eventName, handler){
 
@@ -132,7 +132,6 @@ export class GtEvent{
      * @param [target]
      */
     trigger(eventName, target){
-
         if(this._eventsMap.has(eventName)===false){
             return this;
         }
@@ -145,4 +144,3 @@ export class GtEvent{
         return this;
     }
 }
-

@@ -47,6 +47,7 @@ h1{text-align: center;}
 
     .ButtonGroup{
       overflow: hidden;
+      display: inline-block;
 
       .Button{
         text-transform: capitalize;
@@ -75,7 +76,7 @@ h1{text-align: center;}
           border-color: #adadad;
         }
         &.active{
-          box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.23);
         }
       }
     }
