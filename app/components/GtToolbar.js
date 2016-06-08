@@ -21,6 +21,7 @@ export class GtToolbar  extends GtDomUtil{
     /**
      * @param {Element} toolbarElement
      * @param {Array} [groupStates]
+     * @returns {GtToolbar}
      */
     render(toolbarElement,groupStates){
         let group = this.createNewNode('div',null,'ButtonGroup'),
@@ -28,18 +29,20 @@ export class GtToolbar  extends GtDomUtil{
             state;
 
         for(state in this.stateCollection.states){
-            let button,
-                styles,
-                stateInstance = this.stateCollection.states[state];
+            if(this.stateCollection.states.hasOwnProperty(state)){
+                
+                let button,
+                    stateInstance = this.stateCollection.states[state],
+                    dataValue = stateInstance['actionType'],
+                    dataset = { 'actionType' : dataValue};
 
-            let dataValue = stateInstance['actionType'];
-            let dataset = { 'actionType' : dataValue};
-            button = this.createNewNode('button',null, 'Button',null,dataset,stateInstance['iconHtml'],{'type':'button'});
-            button.addEventListener('click',function(){
-                stateInstance.action();
-            });
-            
-            group.appendChild(button);
+                button = this.createNewNode('button',null, 'Button',null,dataset,stateInstance['iconHtml'],{'type':'button'});
+                button.addEventListener('click',function(){
+                    stateInstance.action();
+                });
+
+                group.appendChild(button);
+            }
         }
 
         frag.appendChild(group);
@@ -47,5 +50,6 @@ export class GtToolbar  extends GtDomUtil{
         toolbarElement.innerHTML = '';
         toolbarElement.appendChild(frag);
 
+        return this;
     }
 }
