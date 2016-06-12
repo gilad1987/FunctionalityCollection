@@ -18,6 +18,12 @@ export class GtToolbar  extends GtEditor{
         this.setStates(statesCollection);
         this.templateStateData = templateStateData;
         this.classNameButtonActive = 'active';
+
+        /**
+         * Reference to DOM Element by actionType( of state)
+         * @type {{}}
+         */
+        this.statesNodes = {};
         
         if(editorParentElement){
             this.render(editorParentElement);
@@ -29,14 +35,20 @@ export class GtToolbar  extends GtEditor{
     }
 
     updateStateButtonElement(state){
-        if(!state || !state.nodeElement){
+        if(!state || !state['actionType']){
             return false;
         }
 
-        return this.toggleClass(
-            state.nodeElement,
-            this.classNameButtonActive
+        let element = this.getStateElementByState(state);
+
+        return element && this.toggleClass(
+                element,
+                this.classNameButtonActive
         );
+    }
+
+    getStateElementByState(state){
+        return state && this.statesNodes[state.actionType];
     }
     
     /**
@@ -45,6 +57,7 @@ export class GtToolbar  extends GtEditor{
      * @returns {GtToolbar}
      */
     render(editorParentElement,groupStates){
+        this.editorElement = editorParentElement;
         let group = this.createNewNode('div',null,'ButtonGroup'),
             toolbarElement = this.createNewNode('div',null,'ToolBar'),
             frag = document.createDocumentFragment(),
@@ -66,18 +79,18 @@ export class GtToolbar  extends GtEditor{
                     buttonClassName = this.templateStateData[stateName].buttonClassName;
 
                 button = this.createNewNode(nodeName,null, buttonClassName,null,dataset,defaultHtml,attrs);
-                state.nodeElement = button;
+                this.statesNodes[ state['actionType'] ] = button;
                 group.appendChild(button);
             }
         }
 
-        editorParentElement.addEventListener('click',(event) => {
+        this.editorElement.addEventListener('click',(event) => {
             this.onButtonClick(event);
         });
 
         toolbarElement.appendChild(group);
         frag.appendChild(toolbarElement);
-        editorParentElement.appendChild(frag);
+        this.editorElement.appendChild(frag);
 
         return this;
     }

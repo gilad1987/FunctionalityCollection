@@ -30,6 +30,7 @@ export class GtEditorContent extends GtEditor{
      * @returns {GtEditor}
      */
     render(editorParentElement){
+        this.editorElement = editorParentElement;
         this.editorContentElement = this.createNewNode('div', null, 'content', null, null, null, {"contenteditable":true});
         let frag = document.createDocumentFragment();
 
@@ -38,7 +39,7 @@ export class GtEditorContent extends GtEditor{
         });
 
         frag.appendChild(this.editorContentElement);
-        editorParentElement.appendChild(frag);
+        this.editorElement.appendChild(frag);
 
         return this;
     }
@@ -47,10 +48,8 @@ export class GtEditorContent extends GtEditor{
         console.log('onKeyUp');
     }
 
-    updateStateButtonElement(state){
-        if(!state || !state.nodeElement){
-            return false;
-        }
+    onStateChange(state){
+        console.log(this);
     }
 
 }
