@@ -53,13 +53,16 @@ export class GtEvent{
          */
         node.applyHandler = function applyHandler(target){
 
-            if( typeof target == 'undefined' || target === null || this.target === target){
-                this.handler.apply(this.context, arguments);
+            if(this.target && (!target || (target && this.target !== target) ) ){
+                return false;
             }
+
+            this.handler.apply(this.context, arguments);
 
             if(this.next){
                 this.next.applyHandler.apply(this.next,arguments);
             }
+
         };
 
         handlersCollection.push(node);
@@ -140,7 +143,7 @@ export class GtEvent{
         let args = arguments[1]; //[].slice.call(arguments,1);
         let node = this._eventsMap.get(eventName)[0];
 
-        node.applyHandler.apply(node,args);
+        node.applyHandler.apply(node,Array.isArray(args) ? args : [args]);
 
         return this;
     }

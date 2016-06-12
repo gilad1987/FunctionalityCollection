@@ -11,21 +11,12 @@ export class GtState extends GtEvent{
      * @param actionType
      * @param on
      * @param enabled
-     * @param styleKey
-     * @param styleValue
-     * @param className
-     * @param iconHtml
      */
-    constructor(actionType,on,enabled,styleKey,styleValue,className,iconHtml){
+    constructor(actionType,on,enabled){
         super();
         this.actionType = actionType;
         this._isOn = on;
         this._isEnabled = enabled;
-        this.className = className;
-        this.styleKey = styleKey;
-        this.styleValue = styleValue;
-        this.reasonCount = 0;
-        this.iconHtml = iconHtml;
     }
 
     subscribe(handler){
@@ -60,16 +51,13 @@ export class GtState extends GtEvent{
         else
             this.reasonCount++;
 
-        if (triggerEvent)
+        if (triggerEvent){
             this.trigger("isEnabledChanged", triggerEvent);
-
-
+        }
     }
 
     action() {
-
-        console.log('fire action: '+this.actionType);
-        this.trigger(this.actionType);
+        this.trigger(this.actionType,[this]);
     }
 
     addObjection(){

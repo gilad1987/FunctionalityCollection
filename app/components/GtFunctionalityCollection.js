@@ -32,20 +32,17 @@ export class GtFunctionalityCollection extends GtEvent{
     }
     
     addActionCollection(states){
-        let stateName;
-        for(stateName in states){
-            if(states.hasOwnProperty(stateName)){
-                this.addAction(stateName, states[stateName]);
+        let len = states.length,
+            i=0;
+
+        for(;i<len;i++){
+            if(states[i].constructor.name == 'GtState'){
+                this.addAction(states[i]);
             }
         }
         return this;
     }
-    
-    triggerAction(actionType){
-        this.trigger(actionType);
-        return this;
-    }
-    
+
     isStateOn(actionType){
         if(actionType && typeof this.states[actionType] == 'undefined'){
             return false;

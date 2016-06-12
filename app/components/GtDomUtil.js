@@ -1,12 +1,13 @@
+import {GtEvent} from "./GtEvent";
 
 /**
  * @date 8.7.2016
  * @author Gilad Takoni
  */
-export class GtDomUtil{
+export class GtDomUtil extends GtEvent{
 
     constructor(){
-
+        super();
     }
 
     /**
@@ -79,5 +80,20 @@ export class GtDomUtil{
         }
         
         return node;
+    }
+
+    getParentById(target,id){
+        if(target.nodeName == id){
+            return event.target;
+        }
+        return target.closest('button');
+    }
+    
+    toggleClass(node,className){
+        if(!node) return false;
+        
+        return node.classList.contains(className) ?
+            node.classList.remove(className) :
+            node.classList.add(className);
     }
 }

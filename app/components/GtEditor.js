@@ -1,46 +1,31 @@
 import {GtDomUtil} from "./GtDomUtil";
 
-/**
- * @date 8.7.2016
- * @author Gilad Takoni
- */
 export class GtEditor extends GtDomUtil{
-
-    /**
-     * @param {GtFunctionalityCollection} stateCollection
-     * @param {Element} [editorElement]
-     */
-    constructor(stateCollection, editorElement){
+    
+    constructor(){
         super();
+        
+    }
+    
+    setStates(stateCollection){
         this.stateCollection = stateCollection;
-        
-        if(editorElement){
-            this.editorElement = editorElement;
-            this.render();
+        this.subscribeToStates();
+    }
+
+    subscribeToStates(){
+        let stateName,state,states;
+        states = this.stateCollection.states;
+        for(stateName in states){
+            if(states.hasOwnProperty(stateName)){
+                state = states[stateName];
+                state.on(
+                    state.actionType,
+                    this.onStateChange,
+                    this
+                );
+            }
         }
-        
     }
 
-    /**
-     * @param {Element} [editorElement]
-     * @returns {GtEditor}
-     */
-    render(editorElement){
-        let editorContent = this.createNewNode('div', null, 'content', null, null, null, {"contenteditable":true}),
-            frag = document.createDocumentFragment();
-
-        editorContent.addEventListener('keydown',(event) => {
-            this.onKeyUp(event);
-        });
-
-        frag.appendChild(editorContent);
-        editorElement.appendChild(frag);
-
-        return this;
-    }
-
-    onKeyUp(event){
-        console.log('onKeyUp');
-    }
-
+    onStateChange(state){}
 }
