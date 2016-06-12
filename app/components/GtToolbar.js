@@ -33,7 +33,6 @@ export class GtToolbar  extends GtEditor{
 
     onStateChange(state){
         this.updateStateButtonElement(state);
-        console.log(this.editorElement);
     }
 
     updateStateButtonElement(state){
