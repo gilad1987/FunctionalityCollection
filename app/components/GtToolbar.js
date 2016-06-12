@@ -18,6 +18,7 @@ export class GtToolbar  extends GtEditor{
         this.setStates(statesCollection);
         this.templateStateData = templateStateData;
         this.classNameButtonActive = 'active';
+        this.editorElement = editorParentElement;
 
         /**
          * Reference to DOM Element by actionType( of state)
@@ -25,13 +26,14 @@ export class GtToolbar  extends GtEditor{
          */
         this.statesNodes = {};
         
-        if(editorParentElement){
-            this.render(editorParentElement);
+        if(this.editorElement){
+            this.render(this.editorElement);
         }
     }
 
     onStateChange(state){
         this.updateStateButtonElement(state);
+        console.log(this.editorElement);
     }
 
     updateStateButtonElement(state){

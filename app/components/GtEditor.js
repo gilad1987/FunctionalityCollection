@@ -5,7 +5,6 @@ export class GtEditor extends GtDomUtil{
     constructor(){
         super();
         this.editorElement = null;
-        
     }
     
     setStates(stateCollection){
@@ -27,5 +26,7 @@ export class GtEditor extends GtDomUtil{
         }
     }
 
-    onStateChange(state){}
+    onStateChange(state){
+        console.log('Abstract:GtDomUtil:onStateChange');
+    }
 }

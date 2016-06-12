@@ -12,17 +12,17 @@ export class GtEditorContent extends GtEditor{
      * @param {object} [templateStateData]
      */
     constructor(statesCollection, editorParentElement, templateStateData){
+
         super();
+
         this.setStates(statesCollection);
         this.templateStateData = templateStateData;
         this.editorContentElement = null;
+        this.editorElement = editorParentElement;
 
-
-        if(editorParentElement){
-            this.editorParentElement = editorParentElement;
-            this.render();
+        if(this.editorElement){
+            this.render(this.editorElement);
         }
-        
     }
 
     /**
@@ -49,7 +49,6 @@ export class GtEditorContent extends GtEditor{
     }
 
     onStateChange(state){
-        console.log(this);
     }
 
 }

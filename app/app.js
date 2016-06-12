@@ -1,6 +1,5 @@
 import 'assets/stylesheets/scss/application.scss';
 
-
 import { GtFunctionalityCollection } from 'components/GtFunctionalityCollection';
 import { GtState } from 'components/GtState';
 import { GtEditorContent } from 'components/GtEditorContent';
@@ -57,6 +56,9 @@ let toolbarStateCollection1 = new GtFunctionalityCollection();
 toolbarStateCollection1.addActionCollection(states);
 let toolbar1 = new GtToolbar(toolbarStateCollection1,null,toolbarTemplateStateData);
 
+let toolbarStateCollection2 = new GtFunctionalityCollection();
+toolbarStateCollection2.addActionCollection(states);
+let toolbar2 = new GtToolbar(toolbarStateCollection2,null,toolbarTemplateStateData);
 
 let editorStateCollection = new GtFunctionalityCollection();
 editorStateCollection.addActionCollection(states);
@@ -66,8 +68,10 @@ let editor = new GtEditorContent(editorStateCollection,null,toolbarTemplateState
 document.addEventListener('DOMContentLoaded',()=>{
   let editorParentElement = document.getElementById('GtTextEditor');
   let editorParentElement1 = document.getElementById('GtTextEditor1');
+  let editorParentElement2 = document.getElementById('GtTextEditor2');
   toolbar.render(editorParentElement);
   toolbar1.render(editorParentElement1);
+  toolbar2.render(editorParentElement2);
   editor.render(editorParentElement);
 });
 
