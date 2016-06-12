@@ -19,8 +19,7 @@ export class GtEditor extends GtDomUtil{
         for(stateName in states){
             if(states.hasOwnProperty(stateName)){
                 state = states[stateName];
-                state.on(
-                    state.actionType,
+                state.subscribe(
                     this.onStateChange,
                     this
                 );

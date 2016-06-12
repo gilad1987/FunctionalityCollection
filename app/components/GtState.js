@@ -19,8 +19,8 @@ export class GtState extends GtEvent{
         this._isEnabled = enabled;
     }
 
-    subscribe(handler){
-        this.on(this.actionType, handler);
+    subscribe(handler, context, target){
+        this.on(this.actionType, handler, context, target);
         return this;
     }
 
