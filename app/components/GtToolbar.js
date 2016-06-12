@@ -21,7 +21,7 @@ export class GtToolbar  extends GtEditor{
         this.editorElement = editorParentElement;
 
         /**
-         * Reference to DOM Element by actionType( of state)
+         * @desc Reference to DOM Element by state's actionType/eventName
          * @type {{}}
          */
         this.statesNodes = {};
@@ -31,10 +31,21 @@ export class GtToolbar  extends GtEditor{
         }
     }
 
+    /**
+     * @desc Call when state's status changed.
+     * @param {GtState} state
+     * @returns {GtToolbar}
+     */
     onStateChange(state){
         this.updateStateButtonElement(state);
+        return this;
     }
 
+    /**
+     * @desc Update Element after state's status changed.
+     * @param {GtState} state
+     * @returns {undefined|boolean}
+     */
     updateStateButtonElement(state){
         if(!state || !state['actionType']){
             return false;
@@ -48,6 +59,12 @@ export class GtToolbar  extends GtEditor{
         );
     }
 
+
+    /**
+     * @desc Get DOM element by state.
+     * @param {GtState} state
+     * @returns {Element}
+     */
     getStateElementByState(state){
         return state && this.statesNodes[state.actionType];
     }

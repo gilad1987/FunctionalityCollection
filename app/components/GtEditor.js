@@ -27,6 +27,6 @@ export class GtEditor extends GtDomUtil{
     }
 
     onStateChange(state){
-        console.log('Abstract:GtDomUtil:onStateChange');
+        console.log('Abstract Function:GtDomUtil:onStateChange');
     }
 }
