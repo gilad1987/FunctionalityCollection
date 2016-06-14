@@ -4,12 +4,12 @@ import { GtFunctionalityCollection } from 'components/GtFunctionalityCollection'
 import { GtState } from 'components/GtState';
 import { GtEditorContent } from 'components/GtEditorContent';
 import { GtToolbar } from 'components/GtToolbar';
-
+import { GtSelection } from "components/GtSelection";
 
 let states = [
-  new GtState('toggleBold',true,true),
-  new GtState('toggleUnderline',true,true),
-  new GtState('toggleItalic',true,true)
+  new GtState('toggleBold',false,true),
+  new GtState('toggleUnderline',false,true),
+  new GtState('toggleItalic',false,true)
 ];
 
 let toolbarTemplateStateData = {
@@ -19,7 +19,7 @@ let toolbarTemplateStateData = {
     'buttonClassName':'Button',
     'id':null,
     'styleKey':'font-weight',
-    'styleValue':'400',
+    'styleValue':'700',
     'wordWrapperClassName':'bold',
     'iconHtml':'b',
     'buttonTitle':'bold'
@@ -48,6 +48,9 @@ let toolbarTemplateStateData = {
   }
 };
 
+
+
+
 let toolbarStateCollection = new GtFunctionalityCollection();
 toolbarStateCollection.addActionCollection(states);
 let toolbar = new GtToolbar(toolbarStateCollection,null,toolbarTemplateStateData);
@@ -67,83 +70,78 @@ let editor = new GtEditorContent(editorStateCollection,null,toolbarTemplateState
 
 document.addEventListener('DOMContentLoaded',()=>{
   let editorParentElement = document.getElementById('GtTextEditor');
-  let editorParentElement1 = document.getElementById('GtTextEditor1');
-  let editorParentElement2 = document.getElementById('GtTextEditor2');
+  let wrapper1 = document.getElementById('GtTextEditor1');
+  let wrapper2 = document.getElementById('GtTextEditor2');
+
   toolbar.render(editorParentElement);
-  toolbar1.render(editorParentElement1);
-  toolbar2.render(editorParentElement2);
+  toolbar1.render(wrapper1);
+  toolbar2.render(wrapper2);
   editor.render(editorParentElement);
+
+
+
+  let selection = new GtSelection();
+  document.addEventListener('selectionchange',(event) => {
+
+    // console.log('selectionchange');
+
+
+    let {startNode,endNode} = selection.getStartAndEndNode(),
+        i=0,
+        len=states.length,
+        currentState,
+        actionType,
+        hasStyle,
+        isStateOn;
+
+    if(startNode.nodeName != 'SPAN'){
+      return;
+    }
+
+    for(;i<len;i++){
+      currentState = states[i];
+      actionType = currentState['actionType'];
+      hasStyle = selection.hasStyle(startNode, toolbarTemplateStateData[actionType].styleKey);
+      isStateOn = currentState.isOn();
+
+      if(hasStyle && !isStateOn || !hasStyle && isStateOn){
+          currentState.action('selectionchange');
+      }
+    }
+
+
+  });
+
+  // document.addEventListener('keydown',(event) => {
+  //     event = event || window.event;
+  //     var key = event.which || event.keyCode; // keyCode detection
+  //     var ctrl = event.ctrlKey ? event.ctrlKey : ((key === 17) ? true : false); // ctrl detection
+  //
+  //     if(!ctrl){
+  //         return false;
+  //     }
+  //
+  //     // Ctrl + V Pressed !
+  //     if ( key == 86 && ctrl ) {}
+  //
+  //     // Ctrl + C Pressed !
+  //     if ( key == 67 && ctrl ) {}
+  //
+  //     // Ctrl + B Pressed !
+  //     if ( key == 66 && ctrl ) {
+  //         states[0].action();
+  //     }
+  //
+  //     // Ctrl + U Pressed !
+  //     if ( key == 85 && ctrl ) {
+  //       states[1].action();
+  //     }
+  //
+  //     // Ctrl + I Pressed !
+  //     if ( key == 73 && ctrl ) {
+  //       states[2].action();
+  //     }
+  // });
+
+
 });
-
-
-/*
-
-
-var keys = {
-   BOLD_BUTTON_CAPTION: "Bold"
-}
-
-app/templates/toolbar.php?lang=en
-Template:
-<span class=""><%= BOLD_BUTTON_CAPTION  %></span>
-
-
-Widget (Toolbar, Editor)
-
-Controller (FunctionStates)
-
-.render() {
-   template = resolvetemplate(this.templateName)
-   html = template.toHTML(this.widgetModel, this.viewData)
-}
-
-
-
-
-
-
-
- */
-// let fc = new GtFunctionalityCollection(GtEventManager);
-// let state = new GtState('toggleBold');
-// state.setOptions(true,true,'font-weight',500,'bold');
-// fc.addAction(state.actionType,state);
-//
-//
-// boldButtonElement.on('click',() => {
-//     state.action();
-// });
-//
-//
-//
-// var states = {
-//     "setBoold": new State(.....)
-//     "setItalic":
-//     "topgleBold":
-// "save":
-// "changeFont":
-//     "void"
-// }
-//
-// var toolbarStateCollection = new GtFunctionalityCollection();
-// toolbarStateCollection.add(states.toggleItalic, states.toggleBold, null, states.saveDoc);
-//
-// var toolbar1 = new Toolbar(toolbarStateCollection, renderelement, .....);
-// toobar1.render();
-//
-// contextMenuStateCollection.add(states.save, state.changeFont, states.setBold);
-// var contextMenu = new ContextMenu(contextMenuStateCollection);
-//
-// class ContextMenu{
-//     render(){
-//         click => state.action();
-//     }
-// }
-//
-//
-//
-//
-//
-//
-//
-// console.log(fc);

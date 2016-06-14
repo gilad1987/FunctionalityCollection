@@ -36,9 +36,11 @@ export class GtFunctionalityCollection extends GtEvent{
             i=0;
 
         for(;i<len;i++){
+
             if(states[i].constructor.name != 'GtState'){
                 throw new Error('Try to add state with non GtState Constructor');
             }
+
             this.addAction(states[i]);
         }
     }

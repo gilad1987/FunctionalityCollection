@@ -15,10 +15,11 @@ export class GtToolbar  extends GtEditor{
         
         super();
 
-        this.setStates(statesCollection);
+        this.currentStyle = {};
         this.templateStateData = templateStateData;
+        this.setStates(statesCollection);
         this.classNameButtonActive = 'active';
-        this.editorElement = editorParentElement;
+        this.wrapperElement = editorParentElement;
 
         /**
          * @desc Reference to DOM Element by state's actionType/eventName
@@ -26,8 +27,8 @@ export class GtToolbar  extends GtEditor{
          */
         this.statesNodes = {};
         
-        if(this.editorElement){
-            this.render(this.editorElement);
+        if(this.wrapperElement){
+            this.render(this.wrapperElement);
         }
     }
 
@@ -47,16 +48,21 @@ export class GtToolbar  extends GtEditor{
      * @returns {undefined|boolean}
      */
     updateStateButtonElement(state){
-        if(!state || !state['actionType']){
+        if( !state ){
             return false;
         }
 
-        let element = this.getStateElementByState(state);
+        let element = this.getStateElementByState(state),
+            className = this.classNameButtonActive;
 
-        return element && this.toggleClass(
-                element,
-                this.classNameButtonActive
-        );
+        if(state.isOn() && !this.hasClass(element, className)){
+            this.addClass(element, className);
+        }
+
+        if(!state.isOn() && this.hasClass(element, className)){
+            this.removeClass(element, className);
+        }
+
     }
 
 
@@ -75,17 +81,20 @@ export class GtToolbar  extends GtEditor{
      * @returns {GtToolbar}
      */
     render(editorParentElement,groupStates){
-        this.editorElement = editorParentElement;
+
+        this.wrapperElement = editorParentElement;
+
         let group = this.createNewNode('div',null,'ButtonGroup'),
             toolbarElement = this.createNewNode('div',null,'ToolBar'),
             frag = document.createDocumentFragment(),
+            states = this.stateCollection.states,
             stateName;
 
         //#TODO implement for groupStates
-        for(stateName in this.stateCollection.states){
-            if(this.stateCollection.states.hasOwnProperty(stateName)){
+        for(stateName in states){
+            if(states.hasOwnProperty(stateName)){
                 let button,
-                    state = this.stateCollection.states[stateName],
+                    state = states[stateName],
                     defaultHtml = this.templateStateData[stateName].iconHtml,
                     dataset = {
                         'actionType' : state['actionType']
@@ -102,18 +111,19 @@ export class GtToolbar  extends GtEditor{
             }
         }
 
-        this.editorElement.addEventListener('click',(event) => {
+        this.wrapperElement.addEventListener('click',(event) => {
             this.onButtonClick(event);
         });
 
+
+
         toolbarElement.appendChild(group);
         frag.appendChild(toolbarElement);
-        this.editorElement.appendChild(frag);
+        this.wrapperElement.appendChild(frag);
 
         return this;
     }
 
-    
     fireActionByDomEvent(event){
         let element = this.getParentById(event.target);
         if(!element){
@@ -129,8 +139,9 @@ export class GtToolbar  extends GtEditor{
             return false;
         }
 
-        this.stateCollection.states[stateName].action();
+        this.stateCollection.states[stateName].action('toolbarClickButton');
     }
+
 
     onButtonClick(event){
         this.fireActionByDomEvent(event);

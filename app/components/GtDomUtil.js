@@ -88,12 +88,94 @@ export class GtDomUtil extends GtEvent{
         }
         return target.closest('button');
     }
-    
+
+    hasStyle(node,key,value){
+        if(!node) return;
+        return value ? node.style[key] == value : node.style[key] != '';
+    }
+
+    setStyle(node,key,value){
+        if(!node) return;
+        node.style[key] = value;
+        return this;
+    }
+
+    removeStyle(node,key){
+        if(!node) return;
+        node.style[key] = null;
+        return this;
+    }
+
+    setStyleCollection(node,collection){
+        let property;
+        for(property in collection){
+            if(collection.hasOwnProperty(property))
+                this.setStyle(node,property,collection[property]);
+        }
+    }
+
+    hasStyleCollection(node,collection){
+        let property,
+            hasStyleCollection = true;
+
+        for(property in collection){
+            if(collection.hasOwnProperty(property) && !this.hasStyle(node,property,collection[property])){
+                hasStyleCollection = false;
+                break;
+            }
+        }
+
+        return hasStyleCollection;
+    }
+
+    hasClass(node,className){
+        return node && node.classList && node.classList.contains(className);
+    }
+
+    addClass(node,className){
+        if(!node) return;
+        node.classList.add(className);
+        return this;
+    }
+
+    removeClass(node,className){
+        if(!node) return;
+        node.classList.remove(className);
+        return this;
+    }
+
     toggleClass(node,className){
         if(!node) return false;
-        
+
         return node.classList.contains(className) ?
             node.classList.remove(className) :
             node.classList.add(className);
     }
+
+    hasChildren(node){
+        return node.childNodes.length!=0;
+    }
+
+    removeStyleHasNoInCollection(node, styleCollection){
+        let key = 0,property;
+        
+        while (property = node.style[key]){
+            if( typeof styleCollection[property] == 'undefined'){
+                node.style[property] = null;
+            }
+
+            key++;
+        }
+    }
+    
+    cloneStyle(nodeHasStyle, node){
+        let key = 0,property;
+
+        while (property = nodeHasStyle.style[key]){
+            node.style[property] = nodeHasStyle.style[property];
+            key++;
+        }
+    }
+    
+
 }

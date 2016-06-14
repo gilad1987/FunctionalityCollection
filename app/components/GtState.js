@@ -7,16 +7,15 @@ import { GtEvent } from './GtEvent';
 export class GtState extends GtEvent{
 
     /**
-     * 
-     * @param actionType
-     * @param on
-     * @param enabled
+     * @param {string} actionType
+     * @param {boolean} on
+     * @param {boolean} enabled
      */
     constructor(actionType,on,enabled){
         super();
         this.actionType = actionType;
         this._isOn = on;
-        this._isEnabled = enabled;
+        this._isEnabled = [];
     }
 
     subscribe(handler, context, target){
@@ -42,8 +41,10 @@ export class GtState extends GtEvent{
     }
 
     setEnabled(isEnabled, reason){
+
         if (this._isEnabled[reason])
             return;
+
         var triggerEvent = (this.isEnabled());
 
         if (this._isEnabled[reason] = isEnabled)
@@ -52,12 +53,23 @@ export class GtState extends GtEvent{
             this.reasonCount++;
 
         if (triggerEvent){
-            this.trigger("isEnabledChanged", triggerEvent);
+            this.trigger("isEnabledChanged", this);
         }
     }
 
     action() {
-        this.trigger(this.actionType,[this]);
+        let args = [this],
+            argumentsLength = arguments.length;
+
+        if(argumentsLength){
+            let i=0;
+            for(;i<argumentsLength;i++){
+                args.push(arguments[i]);
+            }
+        }
+
+        this.setOn( !this.isOn() );
+        this.trigger(this.actionType,args);
     }
 
     addObjection(){
