@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       return;
     }
 
+
     for(;i<len;i++){
       currentState = states[i];
       actionType = currentState['actionType'];

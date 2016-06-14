@@ -1,4 +1,5 @@
 import {GtEditor} from "./GtEditor";
+import {GtSelection} from "./GtSelection";
 
 /**
  * @date 8.7.2016
@@ -26,6 +27,11 @@ export class GtToolbar  extends GtEditor{
          * @type {{}}
          */
         this.statesNodes = {};
+
+        /**
+         * @type {GtSelection}
+         */
+        this.gtSelection = new GtSelection();
         
         if(this.wrapperElement){
             this.render(this.wrapperElement);

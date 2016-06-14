@@ -69,6 +69,8 @@ export class GtEditorContent extends GtEditor{
 
     onKeyUp(event){
 
+        // console.log('onKeyUp');
+        
         /**
          * 40 arrow bottom
          * 38 arrow top
@@ -87,6 +89,7 @@ export class GtEditorContent extends GtEditor{
 
         let splitRequired = this.checkIfSplitRequired(event);
 
+
         if(splitRequired){
 
         }
@@ -100,7 +103,8 @@ export class GtEditorContent extends GtEditor{
     }
 
     onStateChange(state, sourceEvent){
-
+        
+        
         this.updateCurrentStyleByState(state);
         this.updateIsStyleChanged(state);
 
@@ -192,6 +196,7 @@ export class GtEditorContent extends GtEditor{
 
             count++;
             if(count>20) break;
+
         }while( (!lastElement) && (element = element.nextSibling));
 
         // create new range for restore

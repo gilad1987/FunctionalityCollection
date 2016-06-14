@@ -180,4 +180,16 @@ export class GtSelection extends GtDomUtil{
         s.addRange(r);
         return r;
     }
+    
+    getCurrentRange(){
+        if (window.getSelection) {
+            let sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                return sel.getRangeAt(0);
+            }
+        } else if (document.selection && document.selection.createRange) {
+            return document.selection.createRange();
+        }
+        return null;
+    }
 }
