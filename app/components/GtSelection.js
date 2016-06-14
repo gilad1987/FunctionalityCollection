@@ -29,13 +29,14 @@ export class GtSelection extends GtDomUtil{
 
         span.className = 'wordwrapper';
 
+        r = r.cloneRange();
         r.insertNode(span);
 
         r.setStart(span,startOffset?startOffset:0);
         r.setEnd(span,endOffset?endOffset:0);
 
         r.deleteContents();
-        r = r.cloneRange();
+
         s.removeAllRanges();
         s.addRange(r);
 
@@ -81,29 +82,39 @@ export class GtSelection extends GtDomUtil{
     /**
      *
      * @param element
-     * @param offset
+     * @param startOffset
+     * @param endOffset
      * @param length
      * @param lastNode
      * @returns {{range, node}|{range: Range, node: Element}}
      */
-    splitRangeByStyle(element, offset, length, lastNode){
+    splitRangeByStyle(element, startOffset, endOffset, length, lastNode){
         let s = window.getSelection();
         let r = s.getRangeAt(0);
         let textForNewNode;
 
         // get element.firstChild for text Element
         if(lastNode){
-            textForNewNode = element.firstChild.nodeValue.toString().substr(0,offset);
-            element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(offset,length);
+            // textForNewNode = element.firstChild.nodeValue.toString().substr(0,offset);
+            // element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(offset,length);
 
             this.setSelectionBefore(element);
         }else{
-            textForNewNode = element.firstChild.nodeValue.toString().substr(offset,length);
-            element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(0,offset);
+            // textForNewNode = element.firstChild.nodeValue.toString().substr(offset,length);
+            // element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(0,offset);
             this.setSelectionAfter(element);
         }
 
+        textForNewNode = element.firstChild.nodeValue.toString().substr(startOffset,endOffset);
+
         let result = this.createNewTextWrapper(textForNewNode);
+
+        element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(
+            startOffset == 0 ? endOffset : 0  ,
+            startOffset == 0 ? length : startOffset
+        );
+
+
 
         // if(lastNode){
             this.cloneStyle(element,result.node);

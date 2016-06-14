@@ -56,7 +56,7 @@ export class GtEditorContent extends GtEditor{
         frag.appendChild(this.editorContentElement);
         this.wrapperElement.appendChild(frag);
 
-        document.getElementsByClassName('content')[0].innerHTML = '<span class="wordwrapper">moshe</span><span class="wordwrapper">gilad</span><span class="wordwrapper">yael</span><span class="wordwrapper">aviadan</span>'
+        document.getElementsByClassName('content')[0].innerHTML = '<span class="wordwrapper">moshe</span><span class="wordwrapper">gilad</span><span class="wordwrapper">yael</span><span class="wordwrapper">aviadASDASDAan</span>'
 
         return this;
     }
@@ -66,7 +66,7 @@ export class GtEditorContent extends GtEditor{
     checkIfSplitRequired(event){
         return this.isStyleChanged; // || event.keyCode == 13
     }
-    
+
     onKeyUp(event){
 
         /**
@@ -98,7 +98,7 @@ export class GtEditorContent extends GtEditor{
             console.log('selection change');
         }
     }
-    
+
     onStateChange(state, sourceEvent){
 
         this.updateCurrentStyleByState(state);
@@ -137,25 +137,43 @@ export class GtEditorContent extends GtEditor{
             endLength: ec.length
         };
 
-        let currentRangeAfterApplyStyle = r;
+        let lastElement = false,
+            newRangeStartNode,
+            newRangeEndNode;
 
-        let lastElement = false;
+        let count = 0;
 
 
         do{
-            elementNeedSplit =  ( element === startNode && textData.startOffset > 0 ) || ( element === endNode && textData.endOffset > 0 ) ;
+            let startOffset = element === startNode ? textData.startOffset : 0,
+                length = element === startNode ? textData.startLength : textData.endLength,
+                endOffset = element === startNode ? length : textData.endOffset;
+
+            if(startNode === endNode){
+                textData.endOffset = endOffset = r.endOffset - r.startOffset;
+
+                if(startNode.firstChild.length > textData.endOffset){
+                    let {node} = this.gtSelection.splitRangeByStyle(element, 0, textData.startOffset, length, true);
+                    textData.startOffset  = 0;
+                    startOffset = 0;
+                }
+
+                endNode = element;
+            }
+
+
+            elementNeedSplit = (textData.endOffset < element.firstChild.length) &&
+                ( (startNode === endNode && (textData.endOffset - textData.startOffset) > 0 ) ||
+                ( element === startNode && textData.startOffset > 0 ) ||
+                ( element === endNode && (textData.endOffset > 0) ) ) ;
+
             lastElement = ( element === endNode );
+            length = textData.endLength  = element.firstChild.length;
 
             if( elementNeedSplit ){
-                let offset = element === startNode ? textData.startOffset : textData.endOffset,
-                    length = element === startNode ? textData.startLength : textData.endLength;
-
-                let {node,range} = this.gtSelection.splitRangeByStyle(element, offset,length, lastElement);
+                let {node} = this.gtSelection.splitRangeByStyle(element, startOffset, endOffset, element.firstChild.length, lastElement);
                 element = node;
 
-                if(!lastElement){
-                    currentRangeAfterApplyStyle = range;
-                }
             }
 
             if(state.isOn()){
@@ -164,10 +182,24 @@ export class GtEditorContent extends GtEditor{
                 this.removeStyle(element, this.templateStateData[state.actionType].styleKey);
             }
 
+            if(!newRangeStartNode){
+                newRangeStartNode = element;
+            }
 
+            if(lastElement){
+                newRangeEndNode = element;
+            }
+
+            count++;
+            if(count>20) break;
         }while( (!lastElement) && (element = element.nextSibling));
 
-        this.gtSelection.restoreSelection(currentRangeAfterApplyStyle);
+        // create new range for restore
+        let newRange = document.createRange();
+        newRange.setStart(newRangeStartNode, 0);
+        newRange.setEnd(newRangeEndNode.firstChild, newRangeEndNode.firstChild.length);
+
+        this.gtSelection.restoreSelection(newRange);
         this.isStyleChanged = false;
         this.inProcess = false;
 
