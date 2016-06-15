@@ -75,7 +75,10 @@ export class GtSelection extends GtDomUtil{
         
         return {
             startNode: r.startContainer.nodeName == 'SPAN' ? r.startContainer : r.startContainer.parentNode,
-            endNode: r.endContainer.nodeName == 'SPAN' ? r.endContainer : r.endContainer.parentNode
+            endNode: r.endContainer.nodeName == 'SPAN' ? r.endContainer : r.endContainer.parentNode,
+            startOffset: r.startOffset,
+            endOffset: r.endOffset,
+            range: r
         }
     }
 
@@ -85,43 +88,63 @@ export class GtSelection extends GtDomUtil{
      * @param startOffset
      * @param endOffset
      * @param length
-     * @param lastNode
+     * @param {boolean} [setSelectionBefore]
      * @returns {{range, node}|{range: Range, node: Element}}
      */
-    splitRangeByStyle(element, startOffset, endOffset, length, lastNode){
+    splitRangeByStyle(element, startOffset, endOffset, length, setSelectionBefore){
         let s = window.getSelection();
         let r = s.getRangeAt(0);
         let textForNewNode;
 
-        // get element.firstChild for text Element
-        if(lastNode){
-            // textForNewNode = element.firstChild.nodeValue.toString().substr(0,offset);
-            // element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(offset,length);
+        length = length!=null ? length : element.firstChild.length;
 
-            this.setSelectionBefore(element);
-        }else{
-            // textForNewNode = element.firstChild.nodeValue.toString().substr(offset,length);
-            // element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(0,offset);
+        // get element.firstChild for text Element
+        setSelectionBefore ?
+            this.setSelectionBefore(element) :
             this.setSelectionAfter(element);
-        }
 
         textForNewNode = element.firstChild.nodeValue.toString().substr(startOffset,endOffset);
 
         let result = this.createNewTextWrapper(textForNewNode);
+
+
 
         element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(
             startOffset == 0 ? endOffset : 0  ,
             startOffset == 0 ? length : startOffset
         );
 
-
-
-        // if(lastNode){
-            this.cloneStyle(element,result.node);
-        // }
-
+        this.cloneStyle(element,result.node);
 
         return result;
+    }
+
+    /**
+     * @param {Element} node
+     * @returns {Range}
+     */
+    createNewRangeByNode(node){
+        let s = window.getSelection();
+        let r = s.getRangeAt(0);
+        let sc = r.startContainer;
+        let ec = r.endContainer;
+
+        r = r.cloneRange();
+
+        r.deleteContents();
+        r.insertNode(node);
+
+        r.setStart(node.firstChild,0);
+        r.setEnd(node.firstChild,0);
+
+        s.removeAllRanges();
+        s.addRange(r);
+        
+        return r;
+    }
+
+    getCursorData(){
+
     }
 
     isTextSelected(){
@@ -135,24 +158,20 @@ export class GtSelection extends GtDomUtil{
     restoreSelection(range,deleteContent,startOffset,endOffset) {
         if (range) {
             deleteContent = typeof deleteContent == 'undefined' ? false : deleteContent;
-            if (window.getSelection) {
-                let sel = window.getSelection();
+            let sel = window.getSelection();
 
-                if(deleteContent){
-                    range.deleteContents();
-                }
-
-                if(startOffset){
-                    range.setStart(range.startContainer,startOffset);
-                }
-                if(endOffset){
-                    range.setEnd(range.startContainer,endOffset);
-                }
-                sel.removeAllRanges();
-                sel.addRange(range);
-            } else if (document.selection && range.select) {
-                range.select();
+            if(deleteContent){
+                range.deleteContents();
             }
+
+            if(startOffset){
+                range.setStart(range.startContainer,startOffset);
+            }
+            if(endOffset){
+                range.setEnd(range.startContainer,endOffset);
+            }
+            sel.removeAllRanges();
+            sel.addRange(range);
         }
     }
 

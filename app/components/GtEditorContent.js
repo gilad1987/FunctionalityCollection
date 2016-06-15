@@ -56,6 +56,7 @@ export class GtEditorContent extends GtEditor{
         frag.appendChild(this.editorContentElement);
         this.wrapperElement.appendChild(frag);
 
+        // document.getElementsByClassName('content')[0].innerHTML = '<span class="wordwrapper">moshe</span><span class="wordwrapper">gilad</span><span class="wordwrapper">yael</span><span class="wordwrapper">aviadASDASDAan</span>'
         document.getElementsByClassName('content')[0].innerHTML = '<span class="wordwrapper">moshe</span><span class="wordwrapper">gilad</span><span class="wordwrapper">yael</span><span class="wordwrapper">aviadASDASDAan</span>'
 
         return this;
@@ -64,7 +65,16 @@ export class GtEditorContent extends GtEditor{
 
 
     checkIfSplitRequired(event){
-        return this.isStyleChanged; // || event.keyCode == 13
+        let {startNode, endNode, startOffset, endOffset} = this.gtSelection.getStartAndEndNode();
+        return this.isStyleChanged || event.keyCode == 13 && endOffset>0 && !this.isBr(startNode);
+    }
+
+    isBr(node){
+        return node && this.hasClass(node,'br');
+    }
+
+    isWordWrapper(node){
+        return node && this.hasClass(node,'wordwrapper');
     }
 
     onKeyUp(event){
@@ -87,15 +97,69 @@ export class GtEditorContent extends GtEditor{
             return;
         }
 
-        let splitRequired = this.checkIfSplitRequired(event);
+        let onKeyUpRange = this.gtSelection.getCurrentRange(),
+            rangeToRestore = onKeyUpRange;
 
+        let splitRequired = this.checkIfSplitRequired(event);
+        let splitRange;
 
         if(splitRequired){
+            let {startNode, endNode, startOffset, endOffset} = this.gtSelection.getStartAndEndNode();
 
+            let {range, node} = this.gtSelection.splitRangeByStyle(startNode,startOffset,startNode.firstChild.length,startNode.firstChild.length,false);
+            rangeToRestore = range;
+            this.gtSelection.restoreSelection(range);
         }
 
+        // keyCode 13 -> Enter key
+        if(event.keyCode == 13){
+            this.prepareBeforeCreateBr(true);
+            let brRange = this.addBr();
+            this.gtSelection.restoreSelection(rangeToRestore);
+        }
+
+        let currentNode = this.gtSelection.getParentNodeByRange(rangeToRestore);
+
+        if(event.keyCode != 13 && !this.isWordWrapper(currentNode)){
+            let wordWrapper = this.createNewNode('span',this.currentStyle,'wordwrapper',null,null,"\u200B");
+            this.gtSelection.setSelectionBefore(currentNode);
+            this.gtSelection.createNewRangeByNode(wordWrapper);
+        }
+
+        this.isStyleChanged = false;
+
+        if(event.keyCode == 13){
+            event.preventDefault();
+            return false;
+        }
     }
 
+
+    /**
+     *
+     * @returns {Range}
+     */
+    addBr(){
+        let wrapper = this.createNewNode('span',null,'br',null,null,"\u200B<br>");
+        return this.gtSelection.createNewRangeByNode(wrapper);
+    }
+
+    prepareBeforeCreateBr(setSelectionBefore){
+        let s = window.getSelection();
+        let r = s.getRangeAt(0);
+        let sc = r.startContainer;
+        let ec = r.endContainer;
+        let nodeToCheckIsBr = sc.nodeName == 'SPAN' ? sc : sc.parentNode;
+        let newRange;
+        if(setSelectionBefore){
+            newRange = this.gtSelection.setSelectionBefore(nodeToCheckIsBr);
+        }else{
+            newRange = this.gtSelection.setSelectionAfter(nodeToCheckIsBr);
+        }
+
+        return newRange;
+    }
+    
     onSelectionChange(event){
         if(!this.inProcess){
             console.log('selection change');
@@ -103,8 +167,7 @@ export class GtEditorContent extends GtEditor{
     }
 
     onStateChange(state, sourceEvent){
-        
-        
+
         this.updateCurrentStyleByState(state);
         this.updateIsStyleChanged(state);
 
@@ -156,8 +219,8 @@ export class GtEditorContent extends GtEditor{
             if(startNode === endNode){
                 textData.endOffset = endOffset = r.endOffset - r.startOffset;
 
-                if(startNode.firstChild.length > textData.endOffset){
-                    let {node} = this.gtSelection.splitRangeByStyle(element, 0, textData.startOffset, length, true);
+                if(startNode.firstChild.length > textData.endOffset  && textData.startOffset > 0){
+                    this.gtSelection.splitRangeByStyle(element, 0, textData.startOffset, length, true);
                     textData.startOffset  = 0;
                     startOffset = 0;
                 }
@@ -178,6 +241,10 @@ export class GtEditorContent extends GtEditor{
                 let {node} = this.gtSelection.splitRangeByStyle(element, startOffset, endOffset, element.firstChild.length, lastElement);
                 element = node;
 
+            }
+
+            if(this.isBr(element)){
+                continue;
             }
 
             if(state.isOn()){

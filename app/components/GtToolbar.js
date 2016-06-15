@@ -59,13 +59,16 @@ export class GtToolbar  extends GtEditor{
         }
 
         let element = this.getStateElementByState(state),
-            className = this.classNameButtonActive;
+            className = this.classNameButtonActive,
+            isStateOn = state.isOn(),
+            hasClass = this.hasClass(element, className);
 
-        if(state.isOn() && !this.hasClass(element, className)){
+
+        if(isStateOn && !hasClass){
             this.addClass(element, className);
         }
 
-        if(!state.isOn() && this.hasClass(element, className)){
+        if(!isStateOn && hasClass){
             this.removeClass(element, className);
         }
 

@@ -8,6 +8,7 @@ import { GtSelection } from "components/GtSelection";
 
 let states = [
   new GtState('toggleBold',false,true),
+  // new GtState('toggleStrike',false,true),
   new GtState('toggleUnderline',false,true),
   new GtState('toggleItalic',false,true)
 ];
@@ -23,6 +24,17 @@ let toolbarTemplateStateData = {
     'wordWrapperClassName':'bold',
     'iconHtml':'b',
     'buttonTitle':'bold'
+  },
+  toggleStrike:{
+    'nodeType':'button',
+    'nodeName':'button',
+    'buttonClassName':'Button',
+    'id':null,
+    'styleKey':'text-decoration',
+    'styleValue':'line-through',
+    'wordWrapperClassName':'strike',
+    'iconHtml':'<span style="text-decoration: line-through">s</span>',
+    'buttonTitle':'strike'
   },
   toggleUnderline:{
     'nodeType':'button',
