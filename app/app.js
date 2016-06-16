@@ -92,38 +92,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 
 
-  let selection = new GtSelection();
-  document.addEventListener('selectionchange',(event) => {
 
-    // console.log('selectionchange');
-
-
-    let {startNode,endNode} = selection.getStartAndEndNode(),
-        i=0,
-        len=states.length,
-        currentState,
-        actionType,
-        hasStyle,
-        isStateOn;
-
-    if(startNode.nodeName != 'SPAN'){
-      return;
-    }
-
-
-    for(;i<len;i++){
-      currentState = states[i];
-      actionType = currentState['actionType'];
-      hasStyle = selection.hasStyle(startNode, toolbarTemplateStateData[actionType].styleKey);
-      isStateOn = currentState.isOn();
-
-      if(hasStyle && !isStateOn || !hasStyle && isStateOn){
-          currentState.action('selectionchange');
-      }
-    }
-
-
-  });
 
   // document.addEventListener('keydown',(event) => {
   //     event = event || window.event;

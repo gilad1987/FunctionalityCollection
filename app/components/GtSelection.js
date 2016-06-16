@@ -107,8 +107,6 @@ export class GtSelection extends GtDomUtil{
 
         let result = this.createNewTextWrapper(textForNewNode);
 
-
-
         element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(
             startOffset == 0 ? endOffset : 0  ,
             startOffset == 0 ? length : startOffset
@@ -123,7 +121,7 @@ export class GtSelection extends GtDomUtil{
      * @param {Element} node
      * @returns {Range}
      */
-    createNewRangeByNode(node){
+    createNewRangeByNode(node,collapse){
         let s = window.getSelection();
         let r = s.getRangeAt(0);
         let sc = r.startContainer;
@@ -131,6 +129,7 @@ export class GtSelection extends GtDomUtil{
 
         r = r.cloneRange();
 
+        // r.collapse(collapse);
         r.deleteContents();
         r.insertNode(node);
 

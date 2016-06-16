@@ -52,6 +52,11 @@ export class GtEditorContent extends GtEditor{
             this.onKeyUp(event);
         });
 
+        let selection = new GtSelection();
+        document.addEventListener('selectionchange',(event) => {
+            this.onSelectionchange(event);
+        });
+
 
         frag.appendChild(this.editorContentElement);
         this.wrapperElement.appendChild(frag);
@@ -62,11 +67,38 @@ export class GtEditorContent extends GtEditor{
         return this;
     }
 
+    onSelectionchange(event){
+        // console.log('selectionchange');
+
+        if(this.isStyleChanged == true){
+            return;
+        }
+
+        let {startNode,endNode} = this.gtSelection.getStartAndEndNode(),
+            states = this.stateCollection.states,
+            currentState,
+            actionType,
+            hasStyle,
+            isStateOn;
+
+        if(startNode.nodeName != 'SPAN'){
+            return;
+        }
+
+        for(actionType in states){
+            currentState = states[actionType];
+            hasStyle = this.gtSelection.hasStyle(startNode, this.templateStateData[actionType].styleKey);
+            isStateOn = currentState.isOn();
+            if(hasStyle && !isStateOn || !hasStyle && isStateOn){
+                currentState.action('selectionchange');
+            }
+        }
+    }
 
 
     checkIfSplitRequired(event){
         let {startNode, endNode, startOffset, endOffset} = this.gtSelection.getStartAndEndNode();
-        return this.isStyleChanged || event.keyCode == 13 && endOffset>0 && !this.isBr(startNode);
+        return  !this.isBr(startNode) && ( endOffset>0 && startOffset>0 ) && (this.isStyleChanged || event.keyCode == 13);
     }
 
     isBr(node){
@@ -78,6 +110,7 @@ export class GtEditorContent extends GtEditor{
     }
 
     onKeyUp(event){
+
 
         // console.log('onKeyUp');
         
@@ -103,27 +136,32 @@ export class GtEditorContent extends GtEditor{
         let splitRequired = this.checkIfSplitRequired(event);
         let splitRange;
 
-        if(splitRequired){
-            let {startNode, endNode, startOffset, endOffset} = this.gtSelection.getStartAndEndNode();
+        let currentNode = this.gtSelection.getParentNodeByRange(onKeyUpRange);
 
+        let {startNode, endNode, startOffset, endOffset} = this.gtSelection.getStartAndEndNode();
+
+        if(splitRequired){
             let {range, node} = this.gtSelection.splitRangeByStyle(startNode,startOffset,startNode.firstChild.length,startNode.firstChild.length,false);
             rangeToRestore = range;
+            currentNode = node;
             this.gtSelection.restoreSelection(range);
         }
 
         // keyCode 13 -> Enter key
         if(event.keyCode == 13){
-            this.prepareBeforeCreateBr(true);
-            let brRange = this.addBr();
+            let isWordWrapper = this.isWordWrapper(currentNode);
+            this.prepareBeforeCreateBr( true );
+            this.addBr();
             this.gtSelection.restoreSelection(rangeToRestore);
         }
 
-        let currentNode = this.gtSelection.getParentNodeByRange(rangeToRestore);
+        currentNode = this.gtSelection.getParentNodeByRange(rangeToRestore);
 
-        if(event.keyCode != 13 && !this.isWordWrapper(currentNode)){
+        if(event.keyCode != 13 && ( this.isStyleChanged || !this.isWordWrapper(currentNode) )){
             let wordWrapper = this.createNewNode('span',this.currentStyle,'wordwrapper',null,null,"\u200B");
             this.gtSelection.setSelectionBefore(currentNode);
-            this.gtSelection.createNewRangeByNode(wordWrapper);
+            let range = this.gtSelection.createNewRangeByNode(wordWrapper);
+            this.gtSelection.setSelectionAfter(wordWrapper);
         }
 
         this.isStyleChanged = false;
@@ -132,6 +170,7 @@ export class GtEditorContent extends GtEditor{
             event.preventDefault();
             return false;
         }
+
     }
 
 
@@ -168,6 +207,10 @@ export class GtEditorContent extends GtEditor{
 
     onStateChange(state, sourceEvent){
 
+
+        // console.log('start : onStateChange : GtEditorContent');
+        // console.log(sourceEvent);
+
         this.updateCurrentStyleByState(state);
         this.updateIsStyleChanged(state);
 
@@ -179,13 +222,18 @@ export class GtEditorContent extends GtEditor{
 
         }
 
+        // console.log('end : onStateChange : GtEditorContent');
+
     }
 
     applyStyle(state){
 
         if(!this.gtSelection.isTextSelected()){
+            this.isStyleChanged = true;
             return;
         }
+
+        // console.log('start: applyStyle');
 
         this.inProcess = true;
 
@@ -229,7 +277,8 @@ export class GtEditorContent extends GtEditor{
             }
 
 
-            elementNeedSplit = (textData.endOffset < element.firstChild.length) &&
+            elementNeedSplit =
+                // (textData.endOffset < element.firstChild.length) &&
                 ( (startNode === endNode && (textData.endOffset - textData.startOffset) > 0 ) ||
                 ( element === startNode && textData.startOffset > 0 ) ||
                 ( element === endNode && (textData.endOffset > 0) ) ) ;
@@ -275,6 +324,7 @@ export class GtEditorContent extends GtEditor{
         this.isStyleChanged = false;
         this.inProcess = false;
 
+        // console.log('end: applyStyle');
 
     }
 
