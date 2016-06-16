@@ -41,17 +41,17 @@ export class GtToolbar  extends GtEditor{
     /**
      * @desc Call when state's status changed.
      * @param {GtState} state
+     * @param {string} eventName
      * @returns {GtToolbar}
      */
     onStateChange(state, eventName){
-        // console.log('start : onStateChange : GtToolbar');
+
         let {startNode, endNode, startOffset, endOffset, range} =  this.gtSelection.getStartAndEndNode();
         this.updateStateButtonElement(state);
 
         if(eventName == 'toolbarClickButton' && startNode == endNode && endOffset - startOffset == 0){
             this.gtSelection.restoreSelection(range);
         }
-        // console.log('end : onStateChange : GtToolbar');
         return this;
     }
 

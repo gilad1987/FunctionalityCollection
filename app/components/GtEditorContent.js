@@ -68,7 +68,6 @@ export class GtEditorContent extends GtEditor{
     }
 
     onSelectionchange(event){
-        // console.log('selectionchange');
 
         if(this.isStyleChanged == true){
             return;
@@ -175,7 +174,7 @@ export class GtEditorContent extends GtEditor{
 
 
     /**
-     *
+     * @desc Create new <span>\u200B<br></span>
      * @returns {Range}
      */
     addBr(){
@@ -199,17 +198,8 @@ export class GtEditorContent extends GtEditor{
         return newRange;
     }
     
-    onSelectionChange(event){
-        if(!this.inProcess){
-            console.log('selection change');
-        }
-    }
 
     onStateChange(state, sourceEvent){
-
-
-        // console.log('start : onStateChange : GtEditorContent');
-        // console.log(sourceEvent);
 
         this.updateCurrentStyleByState(state);
         this.updateIsStyleChanged(state);
@@ -222,18 +212,14 @@ export class GtEditorContent extends GtEditor{
 
         }
 
-        // console.log('end : onStateChange : GtEditorContent');
-
     }
 
     applyStyle(state){
 
         if(!this.gtSelection.isTextSelected()){
-            this.isStyleChanged = true;
             return;
         }
 
-        // console.log('start: applyStyle');
 
         this.inProcess = true;
 
@@ -323,8 +309,6 @@ export class GtEditorContent extends GtEditor{
         this.gtSelection.restoreSelection(newRange);
         this.isStyleChanged = false;
         this.inProcess = false;
-
-        // console.log('end: applyStyle');
 
     }
 
