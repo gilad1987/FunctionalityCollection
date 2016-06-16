@@ -8,17 +8,17 @@ import {GtSelection} from "./GtSelection";
 export class GtToolbar  extends GtEditor{
 
     /**
-     * @param { GtFunctionalityCollection } statesCollection
+     * @param { GtFunctionalityCollection } functionalityCollection
      * @param {Element} [editorParentElement]
      * @param {Object} [templateStateData]
      */
-    constructor(statesCollection, editorParentElement, templateStateData){
+    constructor(functionalityCollection, editorParentElement, templateStateData){
         
         super();
 
         this.currentStyle = {};
         this.templateStateData = templateStateData;
-        this.setStates(statesCollection);
+        this.setStates(functionalityCollection);
         this.classNameButtonActive = 'active';
         this.wrapperElement = editorParentElement;
 
@@ -103,7 +103,7 @@ export class GtToolbar  extends GtEditor{
         let group = this.createNewNode('div',null,'ButtonGroup'),
             toolbarElement = this.createNewNode('div',null,'ToolBar'),
             frag = document.createDocumentFragment(),
-            states = this.stateCollection.states,
+            states = this.getStates(),
             stateName;
 
         //#TODO implement for groupStates
@@ -151,11 +151,12 @@ export class GtToolbar  extends GtEditor{
             return false;
         }
 
-        if(!this.stateCollection.states[stateName]){
+        let state = this.getState(stateName);
+        if(!state){
             return false;
         }
 
-        this.stateCollection.states[stateName].action('toolbarClickButton');
+        state.action('toolbarClickButton');
     }
 
 

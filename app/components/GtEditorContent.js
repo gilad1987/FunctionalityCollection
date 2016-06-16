@@ -8,17 +8,17 @@ import {GtSelection} from "./GtSelection";
 export class GtEditorContent extends GtEditor{
 
     /**
-     * @param {GtFunctionalityCollection} statesCollection
+     * @param {GtFunctionalityCollection} functionalityCollection
      * @param {Element} [editorParentElement]
      * @param {object} [templateStateData]
      */
-    constructor(statesCollection, editorParentElement, templateStateData){
+    constructor(functionalityCollection, editorParentElement, templateStateData){
 
         super();
 
         this.currentStyle = {};
         this.templateStateData = templateStateData;
-        this.setStates(statesCollection);
+        this.setStates(functionalityCollection);
         this.editorContentElement = null;
         this.wrapperElement = editorParentElement;
         this.isStyleChanged = false;
@@ -62,7 +62,7 @@ export class GtEditorContent extends GtEditor{
         this.wrapperElement.appendChild(frag);
 
         // document.getElementsByClassName('content')[0].innerHTML = '<span class="wordwrapper">moshe</span><span class="wordwrapper">gilad</span><span class="wordwrapper">yael</span><span class="wordwrapper">aviadASDASDAan</span>'
-        document.getElementsByClassName('content')[0].innerHTML = '<span class="wordwrapper">moshe</span><span class="wordwrapper">gilad</span><span class="wordwrapper">yael</span><span class="wordwrapper">aviadASDASDAan</span>'
+        // document.getElementsByClassName('content')[0].innerHTML = '<span class="wordwrapper">moshe</span><span class="wordwrapper">gilad</span><span class="wordwrapper">yael</span><span class="wordwrapper">aviadASDASDAan</span>'
 
         return this;
     }
@@ -74,7 +74,7 @@ export class GtEditorContent extends GtEditor{
         }
 
         let {startNode,endNode} = this.gtSelection.getStartAndEndNode(),
-            states = this.stateCollection.states,
+            states = this.getStates(),
             currentState,
             actionType,
             hasStyle,

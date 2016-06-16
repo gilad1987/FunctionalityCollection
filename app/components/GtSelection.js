@@ -119,20 +119,17 @@ export class GtSelection extends GtDomUtil{
 
     /**
      * @param {Element} node
+     * @param {boolean} [collapse]
      * @returns {Range}
      */
     createNewRangeByNode(node,collapse){
         let s = window.getSelection();
         let r = s.getRangeAt(0);
-        let sc = r.startContainer;
-        let ec = r.endContainer;
 
         r = r.cloneRange();
-
         // r.collapse(collapse);
         r.deleteContents();
         r.insertNode(node);
-
         r.setStart(node.firstChild,0);
         r.setEnd(node.firstChild,0);
 

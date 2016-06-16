@@ -12,15 +12,17 @@ export class GtFunctionalityCollection extends GtEvent{
         this.isEnabled = true;
     }
     
-    getAllState(){}
+    getAllStates(){
+        return this.states;
+    }
     
-    subscribe(actionType, handler, context, target){
-        this.on(actionType, handler, context, target);
+    subscribe(eventName, handler, context, target){
+        this.on(eventName, handler, context, target);
         return this;
     }
     
-    unSubscribe(actionType, handler){
-        this.off(actionType, handler);
+    unSubscribe(eventName, handler){
+        this.off(eventName, handler);
         return this;
     }
     
@@ -45,8 +47,8 @@ export class GtFunctionalityCollection extends GtEvent{
         }
     }
 
-    triggerAction(actionType){
-        this.trigger(actionType);
+    triggerAction(eventName){
+        this.trigger(eventName);
         return this;
     }
 

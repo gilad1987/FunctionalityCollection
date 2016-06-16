@@ -9,14 +9,22 @@ export class GtEditor extends GtDomUtil{
         this.range = null;
     }
     
-    setStates(stateCollection){
-        this.stateCollection = stateCollection;
+    setStates(functionalityCollection){
+        this.functionalityCollection = functionalityCollection;
         this.subscribeToStates();
+    }
+    
+    getStates(){
+        return this.functionalityCollection.getAllStates();
+    }
+    
+    getState(stateName){
+        return this.getStates()[stateName];
     }
 
     subscribeToStates(){
         let stateName,state,states;
-        states = this.stateCollection.states;
+        states = this.getStates();
         for(stateName in states){
 
             if(!states.hasOwnProperty(stateName)){

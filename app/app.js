@@ -4,11 +4,9 @@ import { GtFunctionalityCollection } from 'components/GtFunctionalityCollection'
 import { GtState } from 'components/GtState';
 import { GtEditorContent } from 'components/GtEditorContent';
 import { GtToolbar } from 'components/GtToolbar';
-import { GtSelection } from "components/GtSelection";
 
 let states = [
   new GtState('toggleBold',false,true),
-  // new GtState('toggleStrike',false,true),
   new GtState('toggleUnderline',false,true),
   new GtState('toggleItalic',false,true)
 ];
@@ -63,17 +61,17 @@ let toolbarTemplateStateData = {
 
 
 
-let toolbarStateCollection = new GtFunctionalityCollection();
-toolbarStateCollection.addActionCollection(states);
-let toolbar = new GtToolbar(toolbarStateCollection,null,toolbarTemplateStateData);
+let toolbarFunctionalityCollection = new GtFunctionalityCollection();
+toolbarFunctionalityCollection.addActionCollection(states);
+let toolbar = new GtToolbar(toolbarFunctionalityCollection,null,toolbarTemplateStateData);
 
-let toolbarStateCollection1 = new GtFunctionalityCollection();
-toolbarStateCollection1.addActionCollection(states);
-let toolbar1 = new GtToolbar(toolbarStateCollection1,null,toolbarTemplateStateData);
+let toolbar1FunctionalityCollection = new GtFunctionalityCollection();
+toolbar1FunctionalityCollection.addActionCollection(states);
+let toolbar1 = new GtToolbar(toolbar1FunctionalityCollection,null,toolbarTemplateStateData);
 
-let toolbarStateCollection2 = new GtFunctionalityCollection();
-toolbarStateCollection2.addActionCollection(states);
-let toolbar2 = new GtToolbar(toolbarStateCollection2,null,toolbarTemplateStateData);
+let toolbar2FunctionalityCollection = new GtFunctionalityCollection();
+toolbar2FunctionalityCollection.addActionCollection([states[0]]);
+let toolbar2 = new GtToolbar(toolbar2FunctionalityCollection,null,toolbarTemplateStateData);
 
 let editorStateCollection = new GtFunctionalityCollection();
 editorStateCollection.addActionCollection(states);
