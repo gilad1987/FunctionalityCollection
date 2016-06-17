@@ -38,6 +38,7 @@ export class GtSelection extends GtDomUtil{
         r.deleteContents();
 
         s.removeAllRanges();
+        // console.log('createNewTextWrapper');
         s.addRange(r);
 
         return {
@@ -125,15 +126,18 @@ export class GtSelection extends GtDomUtil{
     createNewRangeByNode(node,collapse){
         let s = window.getSelection();
         let r = s.getRangeAt(0);
+        let sc = r.startContainer;
+        let ec = r.endContainer;
 
         r = r.cloneRange();
-        // r.collapse(collapse);
         r.deleteContents();
         r.insertNode(node);
+
         r.setStart(node.firstChild,0);
         r.setEnd(node.firstChild,0);
 
         s.removeAllRanges();
+        console.log('createNewRangeByNode');
         s.addRange(r);
         
         return r;
@@ -179,6 +183,7 @@ export class GtSelection extends GtDomUtil{
         r = r.cloneRange();
         r.setStartBefore(node);
         s.addRange(r);
+        // console.log('setSelectionBefore');
         return r;
     }
 
@@ -192,6 +197,7 @@ export class GtSelection extends GtDomUtil{
             r.setStart(node,0);
             r.setEnd(node,0);
         }
+        // console.log('setSelectionAfter');
         s.addRange(r);
         return r;
     }

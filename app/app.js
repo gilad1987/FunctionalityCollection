@@ -77,6 +77,10 @@ let editorStateCollection = new GtFunctionalityCollection();
 editorStateCollection.addActionCollection(states);
 let editor = new GtEditorContent(editorStateCollection,null,toolbarTemplateStateData);
 
+let editor2StateCollection = new GtFunctionalityCollection();
+editor2StateCollection.addActionCollection(states);
+let editor2 = new GtEditorContent(editor2StateCollection,null,toolbarTemplateStateData);
+
 
 document.addEventListener('DOMContentLoaded',()=>{
   let editorParentElement = document.getElementById('GtTextEditor');
@@ -84,9 +88,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   let wrapper2 = document.getElementById('GtTextEditor2');
 
   toolbar.render(editorParentElement);
-  toolbar1.render(wrapper1);
-  toolbar2.render(wrapper2);
   editor.render(editorParentElement);
+
+
+  toolbar1.render(wrapper1);
+  editor2.render(wrapper1);
+
+
+  toolbar2.render(wrapper2);
 
 
 

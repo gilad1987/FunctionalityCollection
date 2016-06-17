@@ -22,6 +22,7 @@ export class GtEditorContent extends GtEditor{
         this.editorContentElement = null;
         this.wrapperElement = editorParentElement;
         this.isStyleChanged = false;
+        this.preventSelectionChange = false;
 
         /**
          * @desc true when apply style in process
@@ -33,6 +34,7 @@ export class GtEditorContent extends GtEditor{
          * @type {GtSelection}
          */
         this.gtSelection = new GtSelection();
+        this.gtSelection.on('preventSelectionChange',()=>{});
 
         if(this.wrapperElement){
             this.render(this.wrapperElement);
@@ -165,6 +167,8 @@ export class GtEditorContent extends GtEditor{
 
         this.isStyleChanged = false;
 
+
+
         if(event.keyCode == 13){
             event.preventDefault();
             return false;
@@ -200,11 +204,13 @@ export class GtEditorContent extends GtEditor{
     
 
     onStateChange(state, sourceEvent){
-
+        // console.log(sourceEvent);
+        
         this.updateCurrentStyleByState(state);
         this.updateIsStyleChanged(state);
 
         if(this.isStyleChanged && sourceEvent == 'toolbarClickButton'){
+            
             this.applyStyle(state);
         }
 
