@@ -12,11 +12,11 @@ export class GtSelection extends GtDomUtil{
 
     /**
      *
-     * @param text
-     * @param startOffset
-     * @param endOffset
-     * @param html
-     * @param node
+     * @param {string} [text]
+     * @param {number} [startOffset]
+     * @param {number} [endOffset]
+     * @param {string} [html]
+     * @param {Element} [node]
      * @returns {{range: Range, node: Element}}
      */
     createNewTextWrapper(text,startOffset,endOffset,html,node){
@@ -137,7 +137,7 @@ export class GtSelection extends GtDomUtil{
         r.setEnd(node.firstChild,0);
 
         s.removeAllRanges();
-        console.log('createNewRangeByNode');
+        // console.log('createNewRangeByNode');
         s.addRange(r);
         
         return r;
@@ -171,6 +171,7 @@ export class GtSelection extends GtDomUtil{
                 range.setEnd(range.startContainer,endOffset);
             }
             sel.removeAllRanges();
+            // console.log('restoreSelection');
             sel.addRange(range);
         }
     }

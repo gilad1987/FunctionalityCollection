@@ -54,6 +54,7 @@ export class GtDomUtil extends GtEvent{
             }
         }
 
+        // set data dataSet
         if(dataset){
             if(typeof dataset === 'object'){
                 let currentDataset;
@@ -64,7 +65,8 @@ export class GtDomUtil extends GtEvent{
                 }
             }
         }
-        
+
+        // set attributes
         if(attrs){
             let attribute;
             for(attribute in attrs){
@@ -74,7 +76,7 @@ export class GtDomUtil extends GtEvent{
             }
         }
 
-
+        // set attributes
         if(id){
             node.setAttribute('id',id);
         }
@@ -82,31 +84,63 @@ export class GtDomUtil extends GtEvent{
         return node;
     }
 
-    getParentById(target,id){
-        if(target.nodeName == id){
+    /**
+     *
+     * @param target
+     * @param nodeName
+     * @returns {Element}
+     */
+    getParentByNodeName(target,nodeName){
+        if(target.nodeName == nodeName){
             return event.target;
         }
         return target.closest('button');
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @param {string} key
+     * @param {string} [value]
+     * @returns {boolean}
+     */
     hasStyle(node,key,value){
-        if(!node) return;
+        // console.log('hasStyle');
+        if(!node) return false;
         return value ? node.style[key] == value : node.style[key] != '';
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @param {string} key
+     * @param {string} value
+     * @returns {*}
+     */
     setStyle(node,key,value){
         if(!node) return;
         node.style[key] = value;
         return this;
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @param key
+     * @returns {*}
+     */
     removeStyle(node,key){
         if(!node) return;
         node.style[key] = null;
         return this;
     }
 
-    setStyleCollection(node,collection){
+    /**
+     *
+     * @param {Element} node
+     * @param collection
+     */
+    setStyleByCollection(node,collection){
         let property;
         for(property in collection){
             if(collection.hasOwnProperty(property))
@@ -114,6 +148,12 @@ export class GtDomUtil extends GtEvent{
         }
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @param {object} collection
+     * @returns {boolean}
+     */
     hasStyleCollection(node,collection){
         let property,
             hasStyleCollection = true;
@@ -128,34 +168,70 @@ export class GtDomUtil extends GtEvent{
         return hasStyleCollection;
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @param {string} className
+     * @returns {*|DOMTokenList|boolean}
+     */
     hasClass(node,className){
         return node && node.classList && node.classList.contains(className);
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @param {string} className
+     * @returns {*}
+     */
     addClass(node,className){
         if(!node) return;
         node.classList.add(className);
         return this;
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @param {string} className
+     * @returns {*}
+     */
     removeClass(node,className){
         if(!node) return;
         node.classList.remove(className);
         return this;
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @param {string} className
+     * @returns {*}
+     */
     toggleClass(node,className){
         if(!node) return false;
-
-        return node.classList.contains(className) ?
-            node.classList.remove(className) :
+        
+        node.classList.contains(className) ? 
+            node.classList.remove(className) : 
             node.classList.add(className);
+        
+        return this;
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @returns {boolean}
+     */
     hasChildren(node){
         return node.childNodes.length!=0;
     }
 
+    /**
+     *
+     * @param {Element} node
+     * @param {object} styleCollection
+     */
     removeStyleHasNoInCollection(node, styleCollection){
         let key = 0,property;
         
@@ -167,7 +243,13 @@ export class GtDomUtil extends GtEvent{
             key++;
         }
     }
-    
+
+    /**
+     *
+     * @param {Element} nodeHasStyle
+     * @param {Element} node
+     * @returns {GtDomUtil}
+     */
     cloneStyle(nodeHasStyle, node){
         let key = 0,property;
 
@@ -175,6 +257,8 @@ export class GtDomUtil extends GtEvent{
             node.style[property] = nodeHasStyle.style[property];
             key++;
         }
+        
+        return this;
     }
     
 

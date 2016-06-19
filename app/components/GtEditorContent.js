@@ -71,9 +71,12 @@ export class GtEditorContent extends GtEditor{
 
     onSelectionchange(event){
 
+
         if(this.isStyleChanged == true){
             return;
         }
+
+        // console.log('onSelectionchange');
 
         let {startNode,endNode} = this.gtSelection.getStartAndEndNode(),
             states = this.getStates(),
@@ -87,8 +90,15 @@ export class GtEditorContent extends GtEditor{
         }
 
         for(actionType in states){
+            if(!states.hasOwnProperty(actionType)){
+                return;
+            }
             currentState = states[actionType];
-            hasStyle = this.gtSelection.hasStyle(startNode, this.templateStateData[actionType].styleKey);
+            hasStyle = this.gtSelection.hasStyle(
+                startNode,
+                this.templateStateData[actionType].styleKey,
+                this.templateStateData[actionType].styleValue
+            );
             isStateOn = currentState.isOn();
             if(hasStyle && !isStateOn || !hasStyle && isStateOn){
                 currentState.action('selectionchange');
@@ -112,8 +122,6 @@ export class GtEditorContent extends GtEditor{
 
     onKeyUp(event){
 
-
-        // console.log('onKeyUp');
         
         /**
          * 40 arrow bottom
@@ -125,9 +133,26 @@ export class GtEditorContent extends GtEditor{
             return;
         }
 
+        event = event || window.event;
+        let key = event.which || event.keyCode; // keyCode detection
+        let ctrl = event.ctrlKey ? event.ctrlKey : ((key === 17) ? true : false); // ctrl detection
+
+        /**
+         * key == 86 -> Ctrl + V Pressed
+         * key == 67 -> Ctrl + C Pressed
+         * key == 66 -> Ctrl + B Pressed
+         * key == 85 -> Ctrl + U Pressed
+         * key == 73 -> Ctrl + I Pressed
+         */
+        if(ctrl && [86,67,66,65,85,63].indexOf(key) == -1){
+            return;
+        }
+
+        console.log('onKeyUp');
+
         if(!this.hasChildren(this.editorContentElement)){
             let { node } = this.gtSelection.createNewTextWrapper();
-            this.setStyleCollection( node, this.currentStyle );
+            this.setStyleByCollection( node, this.currentStyle );
             return;
         }
 
@@ -271,7 +296,7 @@ export class GtEditorContent extends GtEditor{
 
             elementNeedSplit =
                 // (textData.endOffset < element.firstChild.length) &&
-                ( (startNode === endNode && (textData.endOffset - textData.startOffset) > 0 ) ||
+                ( (startNode === endNode && ((textData.endOffset - textData.startOffset) > 0) && (textData.endOffset - textData.startOffset) < length ) ||
                 ( element === startNode && textData.startOffset > 0 ) ||
                 ( element === endNode && (textData.endOffset > 0) ) ) ;
 

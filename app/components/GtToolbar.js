@@ -108,7 +108,7 @@ export class GtToolbar  extends GtEditor{
 
         //#TODO implement for groupStates
         for(stateName in states){
-            if(states.hasOwnProperty(stateName)){
+            if( states.hasOwnProperty(stateName) ){
                 let button,
                     state = states[stateName],
                     defaultHtml = this.templateStateData[stateName].iconHtml,
@@ -141,7 +141,7 @@ export class GtToolbar  extends GtEditor{
     }
 
     fireActionByDomEvent(event){
-        let element = this.getParentById(event.target);
+        let element = this.getParentByNodeName(event.target);
         if(!element){
             return false;
         }
