@@ -148,7 +148,7 @@ export class GtEditorContent extends GtEditor{
             return;
         }
 
-        console.log('onKeyUp');
+        // console.log('onKeyUp');
 
         if(!this.hasChildren(this.editorContentElement)){
             let { node } = this.gtSelection.createNewTextWrapper();
@@ -294,11 +294,15 @@ export class GtEditorContent extends GtEditor{
             }
 
 
+            let fcLength = this.gtSelection.getParentNodeByRange(r).firstChild.length;
             elementNeedSplit =
+
+
+
                 // (textData.endOffset < element.firstChild.length) &&
-                ( (startNode === endNode && ((textData.endOffset - textData.startOffset) > 0) && (textData.endOffset - textData.startOffset) < length ) ||
+                ( (startNode === endNode && ((textData.endOffset - textData.startOffset) > 0) && (textData.endOffset - textData.startOffset) < fcLength ) ||
                 ( element === startNode && textData.startOffset > 0 ) ||
-                ( element === endNode && (textData.endOffset > 0) ) ) ;
+                ( element === endNode && (textData.endOffset > 0) && textData.startOffset>0) ) ;
 
             lastElement = ( element === endNode );
             length = textData.endLength  = element.firstChild.length;
@@ -328,7 +332,10 @@ export class GtEditorContent extends GtEditor{
             }
 
             count++;
-            if(count>20) break;
+            if(count>20) {
+                console.log('break');
+                break;
+            }
 
         }while( (!lastElement) && (element = element.nextSibling));
 

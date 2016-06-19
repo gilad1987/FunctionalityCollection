@@ -8,7 +8,8 @@ import { GtToolbar } from 'components/GtToolbar';
 let states = [
   new GtState('toggleBold',false,true),
   new GtState('toggleUnderline',false,true),
-  new GtState('toggleItalic',false,true)
+  new GtState('toggleItalic',false,true),
+  new GtState('toggleStrike',false,true)
 ];
 
 let toolbarTemplateStateData = {
@@ -42,7 +43,7 @@ let toolbarTemplateStateData = {
     'styleKey':'text-decoration',
     'styleValue':'underline',
     'wordWrapperClassName':'underline',
-    'iconHtml':'u',
+    'iconHtml':'<span style="text-decoration: underline">U</span>',
     'buttonTitle':'underline'
   },
   toggleItalic:{
@@ -53,7 +54,7 @@ let toolbarTemplateStateData = {
     'styleKey':'font-style',
     'styleValue':'italic',
     'wordWrapperClassName':'italic',
-    'iconHtml':'i',
+    'iconHtml':'<span style="font-style: italic">I</span>',
     'buttonTitle':'italic'
   }
 };
@@ -70,7 +71,7 @@ toolbar1FunctionalityCollection.addActionCollection(states);
 let toolbar1 = new GtToolbar(toolbar1FunctionalityCollection,null,toolbarTemplateStateData);
 
 let toolbar2FunctionalityCollection = new GtFunctionalityCollection();
-toolbar2FunctionalityCollection.addActionCollection([states[0]]);
+toolbar2FunctionalityCollection.addActionCollection( [states[0]] );
 let toolbar2 = new GtToolbar(toolbar2FunctionalityCollection,null,toolbarTemplateStateData);
 
 let editorStateCollection = new GtFunctionalityCollection();
@@ -93,44 +94,45 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   toolbar1.render(wrapper1);
   editor2.render(wrapper1);
-
-
   toolbar2.render(wrapper2);
 
 
 
 
 
-  // document.addEventListener('keydown',(event) => {
-  //     event = event || window.event;
-  //     var key = event.which || event.keyCode; // keyCode detection
-  //     var ctrl = event.ctrlKey ? event.ctrlKey : ((key === 17) ? true : false); // ctrl detection
-  //
-  //     if(!ctrl){
-  //         return false;
-  //     }
-  //
-  //     // Ctrl + V Pressed !
-  //     if ( key == 86 && ctrl ) {}
-  //
-  //     // Ctrl + C Pressed !
-  //     if ( key == 67 && ctrl ) {}
-  //
-  //     // Ctrl + B Pressed !
-  //     if ( key == 66 && ctrl ) {
-  //         states[0].action();
-  //     }
-  //
-  //     // Ctrl + U Pressed !
-  //     if ( key == 85 && ctrl ) {
-  //       states[1].action();
-  //     }
-  //
-  //     // Ctrl + I Pressed !
-  //     if ( key == 73 && ctrl ) {
-  //       states[2].action();
-  //     }
-  // });
+  document.addEventListener('keydown',(event) => {
+
+    return ;
+
+      event = event || window.event;
+      var key = event.which || event.keyCode; // keyCode detection
+      var ctrl = event.ctrlKey ? event.ctrlKey : ((key === 17) ? true : false); // ctrl detection
+
+      if(!ctrl){
+          return false;
+      }
+
+      // Ctrl + V Pressed !
+      if ( key == 86 && ctrl ) {}
+      //
+      // Ctrl + C Pressed !
+      if ( key == 67 && ctrl ) {}
+      //
+      // Ctrl + B Pressed !
+      if ( key == 66 && ctrl ) {
+          states[0].action();
+      }
+      //
+      // Ctrl + U Pressed !
+      if ( key == 85 && ctrl ) {
+        states[1].action();
+      }
+      //
+      // Ctrl + I Pressed !
+      if ( key == 73 && ctrl ) {
+        states[2].action();
+      }
+  });
 
 
 });
