@@ -1,3 +1,4 @@
+import '../node_modules/font-awesome/scss/font-awesome.scss';
 import 'assets/stylesheets/scss/application.scss';
 
 import { GtFunctionalityCollection } from 'components/GtFunctionalityCollection';
@@ -6,98 +7,117 @@ import { GtEditorContent } from 'components/GtEditorContent';
 import { GtToolbar } from 'components/GtToolbar';
 
 let states = [
-  new GtState('toggleBold',false,true),
-  new GtState('toggleUnderline',false,true),
-  new GtState('toggleItalic',false,true),
-  new GtState('toggleStrike',false,true)
+    new GtState('bold',true),
+    new GtState('textAlign',true)
 ];
 
 let toolbarTemplateStateData = {
-  toggleBold:{
-    'nodeType':'button',
-    'nodeName':'button',
-    'buttonClassName':'Button',
-    'id':null,
-    'styleKey':'font-weight',
-    'styleValue':'700',
-    'wordWrapperClassName':'bold',
-    'iconHtml':'b',
-    'buttonTitle':'bold'
-  },
-  toggleStrike:{
-    'nodeType':'button',
-    'nodeName':'button',
-    'buttonClassName':'Button',
-    'id':null,
-    'styleKey':'text-decoration',
-    'styleValue':'line-through',
-    'wordWrapperClassName':'strike',
-    'iconHtml':'<span style="text-decoration: line-through">s</span>',
-    'buttonTitle':'strike'
-  },
-  toggleUnderline:{
-    'nodeType':'button',
-    'nodeName':'button',
-    'buttonClassName':'Button',
-    'id':null,
-    'styleKey':'text-decoration',
-    'styleValue':'underline',
-    'wordWrapperClassName':'underline',
-    'iconHtml':'<span style="text-decoration: underline">U</span>',
-    'buttonTitle':'underline'
-  },
-  toggleItalic:{
-    'nodeType':'button',
-    'nodeName':'button',
-    'buttonClassName':'Button',
-    'id':null,
-    'styleKey':'font-style',
-    'styleValue':'italic',
-    'wordWrapperClassName':'italic',
-    'iconHtml':'<span style="font-style: italic">I</span>',
-    'buttonTitle':'italic'
-  }
+
+    'bold':{
+        type:'toggle', // options --> toggle / group / list
+        style: {
+            key: "font-weight",
+            values: ['300', '700']
+        },
+        buttons: {
+            700:{
+                nodeName:'button',
+                elementAttrs:{
+                    type:'button',
+                    title:'bold'
+                },
+
+                icon:'<span style="font-weight: 700">B</span>'
+            }
+        }
+
+    },
+
+    'textAlign':{
+        type:'group', // options --> toggle / group / list
+        style: {
+            key: "text-align",
+            values: ['left', 'right','center','justify']
+        },
+        buttons: {
+            'left':{
+                nodeName:'button',
+                elementAttrs:{
+                    type:'button',
+                    title:'Text align left'
+                },
+
+                icon:'<i class="fa fa-align-left" aria-hidden="true"></i>'
+            },
+            'right':{
+                nodeName:'button',
+                elementAttrs:{
+                    title:'Text align right',
+                    type:'button'
+                },
+
+                icon:'<i class="fa fa-align-right" aria-hidden="true"></i>'
+            },
+            'center':{
+                nodeName:'button',
+                elementAttrs:{
+                    title:'Text align center',
+                    type:'button'
+                },
+
+                icon:'<i class="fa fa-align-center" aria-hidden="true"></i>'
+            },
+            'justify':{
+                nodeName:'button',
+                elementAttrs:{
+                    title:'Text align justify',
+                    type:'button'
+                },
+
+                icon:'<i class="fa fa-align-justify" aria-hidden="true"></i>'
+            }
+
+        }
+
+    }
 };
 
 
 
 
 let toolbarFunctionalityCollection = new GtFunctionalityCollection();
-toolbarFunctionalityCollection.addActionCollection(states);
+toolbarFunctionalityCollection.addStateCollection(states);
 let toolbar = new GtToolbar(toolbarFunctionalityCollection,null,toolbarTemplateStateData);
 
 let toolbar1FunctionalityCollection = new GtFunctionalityCollection();
-toolbar1FunctionalityCollection.addActionCollection(states);
+toolbar1FunctionalityCollection.addStateCollection(states);
 let toolbar1 = new GtToolbar(toolbar1FunctionalityCollection,null,toolbarTemplateStateData);
 
 let toolbar2FunctionalityCollection = new GtFunctionalityCollection();
-toolbar2FunctionalityCollection.addActionCollection( [states[0]] );
+toolbar2FunctionalityCollection.addStateCollection( [states[0]] );
 let toolbar2 = new GtToolbar(toolbar2FunctionalityCollection,null,toolbarTemplateStateData);
 
 let editorStateCollection = new GtFunctionalityCollection();
-editorStateCollection.addActionCollection(states);
+editorStateCollection.addStateCollection(states);
 let editor = new GtEditorContent(editorStateCollection,null,toolbarTemplateStateData);
 
 let editor2StateCollection = new GtFunctionalityCollection();
-editor2StateCollection.addActionCollection(states);
+editor2StateCollection.addStateCollection(states);
 let editor2 = new GtEditorContent(editor2StateCollection,null,toolbarTemplateStateData);
 
 
 document.addEventListener('DOMContentLoaded',()=>{
-  let editorParentElement = document.getElementById('GtTextEditor');
-  let wrapper1 = document.getElementById('GtTextEditor1');
-  let wrapper2 = document.getElementById('GtTextEditor2');
+    let editorParentElement = document.getElementById('GtTextEditor');
+    let wrapper1 = document.getElementById('GtTextEditor1');
+    let wrapper2 = document.getElementById('GtTextEditor2');
 
-  toolbar.render(editorParentElement);
-  editor.render(editorParentElement);
-
-
-  toolbar1.render(wrapper1);
-  editor2.render(wrapper1);
-  toolbar2.render(wrapper2);
+    toolbar.render(editorParentElement);
+    editor.render(editorParentElement);
 
 
-
+    toolbar1.render(wrapper1);
+    editor2.render(wrapper1);
+    toolbar2.render(wrapper2);
 
 
   document.addEventListener('keydown',(event) => {

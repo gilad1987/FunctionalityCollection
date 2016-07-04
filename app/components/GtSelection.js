@@ -93,6 +93,22 @@ export class GtSelection extends GtDomUtil{
      * @returns {{range, node}|{range: Range, node: Element}}
      */
     splitRangeByStyle(element, startOffset, endOffset, length, setSelectionBefore){
+
+
+        function setSelection(){
+            var a = document.getElementById('a');
+            var range = document.createRange();
+            var s = document.getSelection();
+
+            range.setStart(a.firstChild, 1);
+            range.setEnd(a.firstChild, 1);
+            s.removeAllRanges();
+            s.addRange(range);
+        }
+
+
+
+
         let s = window.getSelection();
         let r = s.getRangeAt(0);
         let textForNewNode;

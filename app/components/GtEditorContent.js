@@ -16,7 +16,7 @@ export class GtEditorContent extends GtEditor{
 
         super();
 
-        this.currentStyle = {};
+        
         this.templateStateData = templateStateData;
         this.setStates(functionalityCollection);
         this.editorContentElement = null;
@@ -43,9 +43,10 @@ export class GtEditorContent extends GtEditor{
 
     /**
      * @param {Element} [editorParentElement]
+     * @param {Array} [textForInit]
      * @returns {GtEditor}
      */
-    render(editorParentElement){
+    render(editorParentElement,textForInit){
         this.wrapperElement = editorParentElement;
         this.editorContentElement = this.createNewNode('div', null, 'content', null, null, null, {"contenteditable":true});
         let frag = document.createDocumentFragment();
@@ -56,8 +57,37 @@ export class GtEditorContent extends GtEditor{
 
         let selection = new GtSelection();
         document.addEventListener('selectionchange',(event) => {
+            let {startNode} = this.gtSelection.getStartAndEndNode();
+            let contentElement = startNode.closest('.content');
+            if(contentElement !== this.editorContentElement){
+                return false;
+            }
             this.onSelectionchange(event);
         });
+
+        if(textForInit){
+            for(let i=0;i<textForInit.length; i++){
+                let current = textForInit[i];
+                let style = {};
+                let node;
+
+                if(current.italic){
+                    style['font-style'] = 'italic';
+                }
+                if(current.bold){
+                    style['font-weight'] = 'bold';
+                }
+                if(current.text != 'br'){
+                    node = this.createNewNode('span', style, 'wordwrapper');
+                    node.innerText = current.text;
+                }else{
+                    node = this.createBr();
+                }
+
+                this.editorContentElement.appendChild(node);
+            }
+        }
+
 
 
         frag.appendChild(this.editorContentElement);
@@ -202,12 +232,16 @@ export class GtEditorContent extends GtEditor{
     }
 
 
+    createBr(){
+        return this.createNewNode('span',null,'br',null,null,"\u200B<br>");
+    }
+
     /**
      * @desc Create new <span>\u200B<br></span>
      * @returns {Range}
      */
     addBr(){
-        let wrapper = this.createNewNode('span',null,'br',null,null,"\u200B<br>");
+        let wrapper = this.createBr();
         return this.gtSelection.createNewRangeByNode(wrapper);
     }
 
@@ -230,9 +264,9 @@ export class GtEditorContent extends GtEditor{
 
     onStateChange(state, sourceEvent){
         // console.log(sourceEvent);
-        
         this.updateCurrentStyleByState(state);
-        this.updateIsStyleChanged(state);
+        let { startNode } = this.gtSelection.getStartAndEndNode();
+        this.compareStyleWithElement(startNode);
 
         if(this.isStyleChanged && sourceEvent == 'toolbarClickButton'){
             

@@ -14,7 +14,7 @@ export class GtDomUtil extends GtEvent{
      *
      * @param {string} nodeName
      * @param {Object|null} [styles]
-     * @param {array|string|null} [classes]
+     * @param {Array|string|null} [classes]
      * @param {string|null} [id]
      * @param {object|string} [dataset]
      * @param {Element|string} [htmlOrString]
@@ -192,13 +192,22 @@ export class GtDomUtil extends GtEvent{
 
     /**
      *
-     * @param {Element} node
+     * @param {Element|Array} elements
      * @param {string} className
      * @returns {*}
      */
-    removeClass(node,className){
-        if(!node) return;
-        node.classList.remove(className);
+    removeClass(elements,className){
+        if(!elements) return this;
+
+        if(Array.isArray(elements)){
+            elements = [elements];
+        }
+
+        let i=0,len=elements.length;
+        for(;i<len;i++){
+            elements[i].classList.remove(className);
+        }
+
         return this;
     }
 

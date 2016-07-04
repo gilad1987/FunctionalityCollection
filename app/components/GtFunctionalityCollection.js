@@ -25,15 +25,15 @@ export class GtFunctionalityCollection extends GtEvent{
         this.off(eventName, handler);
         return this;
     }
-    
-    addAction(state){
-        if(!this.states[state.actionType]){
-            this.states[state.actionType] = state;
+
+    addState(state){
+        if(!this.states[state.stateName]){
+            this.states[state.stateName] = state;
         }
         return this;
     }
     
-    addActionCollection(states){
+    addStateCollection(states){
         let len = states.length,
             i=0;
 
@@ -43,7 +43,7 @@ export class GtFunctionalityCollection extends GtEvent{
                 // throw new Error('Try to add state with non GtState Constructor');
             }
 
-            this.addAction(states[i]);
+            this.addState(states[i]);
         }
     }
 

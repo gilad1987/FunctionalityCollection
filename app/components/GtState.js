@@ -7,24 +7,25 @@ import { GtEvent } from './GtEvent';
 export class GtState extends GtEvent{
 
     /**
-     * @param {string} actionType
-     * @param {boolean} on
+     * @param {string} stateName
      * @param {boolean} enabled
      */
-    constructor(actionType,on,enabled){
+    constructor(stateName,enabled){
         super();
-        this.actionType = actionType;
-        this._isOn = on;
+        this.stateName = stateName;
+        this.eventNameOnChangeValue = 'valueChange';
         this._isEnabled = [];
+        this._currentIndex = 0;
+        this.maxIndex = 0;
     }
 
-    subscribe(handler, context, target){
-        this.on(this.actionType, handler, context, target);
+    subscribe(handler, context){
+        this.on(this.eventNameOnChangeValue, handler, context, this);
         return this;
     }
 
     unSubscribe(handler){
-        this.off(this.actionType, handler);
+        this.off(this.eventNameOnChangeValue, handler);
         return this;
     }
     
@@ -57,6 +58,39 @@ export class GtState extends GtEvent{
         }
     }
 
+    toggle(){
+        return this.setCurrentIndex();
+    }
+
+    setCurrentIndex(index){
+        this._currentIndex = index;
+        // let args = [this],
+        //     argumentsLength = arguments.length;
+        //
+        // if(argumentsLength){
+        //     let i=0;
+        //     for(;i<argumentsLength;i++){
+        //         args.push(arguments[i]);
+        //     }
+        // }
+        //
+        // let nextIndex = index;
+        //
+        // if(!nextIndex){
+        //     nextIndex = this.currentIndex+1;
+        //     if( nextIndex > this.maxIndex ){
+        //         nextIndex = 0;
+        //     }
+        // }
+        //
+        // this.currentIndex = nextIndex;
+
+        // this.trigger(this.eventNameOnChangeValue,args);
+    }
+
+    getCurrentIndex(){
+        return this._currentIndex;
+    }
     action() {
         let args = [this],
             argumentsLength = arguments.length;
@@ -69,7 +103,7 @@ export class GtState extends GtEvent{
         }
 
         this.setOn( !this.isOn() );
-        this.trigger(this.actionType,args);
+        this.trigger(this.eventNameOnChangeValue,args);
     }
 
     addObjection(){
