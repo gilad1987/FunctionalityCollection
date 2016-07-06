@@ -69,7 +69,7 @@ export class GtSelection extends GtDomUtil{
      * @param {Range} [range]
      * @returns {{startNode: Node, endNode: Node}}
      */
-    getStartAndEndNode(range){
+    getCursorInfo(range){
         
         let s = window.getSelection();
         let r = range ? range : s.getRangeAt(0);
@@ -88,50 +88,40 @@ export class GtSelection extends GtDomUtil{
      * @param element
      * @param startOffset
      * @param endOffset
-     * @param length
-     * @param {boolean} [setSelectionBefore]
-     * @returns {{range, node}|{range: Range, node: Element}}
+     * @returns {{firstElement: Element, middleElement: Element|undefined, lastElement: Element}}
      */
-    splitRangeByStyle(element, startOffset, endOffset, length, setSelectionBefore){
+    splitText(element, startOffset, endOffset) {
 
+        let nodeTextToSplit = element.firstChild,
+            middleElement,
+            lastElement,
+            textStart,
+            textMiddle,
+            textLast;
 
-        function setSelection(){
-            var a = document.getElementById('a');
-            var range = document.createRange();
-            var s = document.getSelection();
-
-            range.setStart(a.firstChild, 1);
-            range.setEnd(a.firstChild, 1);
-            s.removeAllRanges();
-            s.addRange(range);
+        if(startOffset > 0 && endOffset < length){
+            textStart = nodeTextToSplit.nodeValue.toString().substr(0,startOffset);
+            textMiddle = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
+            textLast = nodeTextToSplit.nodeValue.toString().substr(endOffset,nodeTextToSplit.length);
+            nodeTextToSplit.nodeValue = textStart;
+            middleElement = this.createNewNode('span',null,'wordwrapper',null,null,textMiddle);
+            lastElement = this.createNewNode('span',null,'wordwrapper',null,null,textLast);
+            this.insertAfter(middleElement, element);
+            this.insertAfter(lastElement, middleElement);
+        }else{
+            textStart = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
+            textLast = nodeTextToSplit.nodeValue.toString().substr(endOffset,nodeTextToSplit.length);
+            nodeTextToSplit.nodeValue = textStart;
+            lastElement = this.createNewNode('span',null,'wordwrapper',null,null,textLast);
+            this.insertAfter(lastElement,element);
         }
 
+        return{
+            firstElement:element,
+            middleElement:middleElement,
+            lastElement:lastElement
+        }
 
-
-
-        let s = window.getSelection();
-        let r = s.getRangeAt(0);
-        let textForNewNode;
-
-        length = length!=null ? length : element.firstChild.length;
-
-        // get element.firstChild for text Element
-        setSelectionBefore ?
-            this.setSelectionBefore(element) :
-            this.setSelectionAfter(element);
-
-        textForNewNode = element.firstChild.nodeValue.toString().substr(startOffset,endOffset);
-
-        let result = this.createNewTextWrapper(textForNewNode);
-
-        element.firstChild.nodeValue = element.firstChild.nodeValue.toString().substr(
-            startOffset == 0 ? endOffset : 0  ,
-            startOffset == 0 ? length : startOffset
-        );
-
-        this.cloneStyle(element,result.node);
-
-        return result;
     }
 
     /**
@@ -146,7 +136,7 @@ export class GtSelection extends GtDomUtil{
         let ec = r.endContainer;
 
         r = r.cloneRange();
-        r.deleteContents();
+        // r.deleteContents();
         r.insertNode(node);
 
         r.setStart(node.firstChild,0);
@@ -166,9 +156,23 @@ export class GtSelection extends GtDomUtil{
     isTextSelected(){
         let s = window.getSelection();
         let r = s.getRangeAt(0);
-        let {startNode, endNode} = this.getStartAndEndNode(r);
+        let {startNode, endNode} = this.getCursorInfo(r);
 
         return ( ( r.endOffset - r.startOffset ) != 0 ) || startNode !== endNode;
+    }
+
+    addRange(startNode, endNode, startOffset, endOffset){
+        let range = document.createRange(),
+            selection = window.getSelection();
+
+        range.selectNode(startNode);
+        range.setStart(startNode.firstChild,0);
+        range.setEnd(startNode.firstChild,0);
+        
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        return range;
     }
 
     restoreSelection(range,deleteContent,startOffset,endOffset) {

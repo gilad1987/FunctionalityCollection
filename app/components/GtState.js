@@ -58,9 +58,7 @@ export class GtState extends GtEvent{
         }
     }
 
-    toggle(){
-        return this.setCurrentIndex();
-    }
+    toggle(){}
 
     setCurrentIndex(index){
         this._currentIndex = index;
@@ -91,6 +89,7 @@ export class GtState extends GtEvent{
     getCurrentIndex(){
         return this._currentIndex;
     }
+    
     action() {
         let args = [this],
             argumentsLength = arguments.length;
@@ -102,7 +101,6 @@ export class GtState extends GtEvent{
             }
         }
 
-        this.setOn( !this.isOn() );
         this.trigger(this.eventNameOnChangeValue,args);
     }
 

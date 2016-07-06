@@ -13,7 +13,7 @@ export class GtToolbar  extends GtEditor{
      * @param {Object} [templateStateData]
      */
     constructor(functionalityCollection, editorParentElement, templateStateData){
-        
+
         super();
 
         this.currentStyle = {};
@@ -21,12 +21,6 @@ export class GtToolbar  extends GtEditor{
         this.setStates(functionalityCollection);
         this.classNameButtonActive = 'active';
         this.wrapperElement = editorParentElement;
-
-        /**
-         * @desc Reference to DOM Element by state's actionType/eventName
-         * @type {{}}
-         */
-        this.statesNodes = {};
 
         /**
          * @type {GtSelection}
@@ -46,27 +40,48 @@ export class GtToolbar  extends GtEditor{
      */
     onStateChange(state, eventName){
 
-        let {startNode, endNode, startOffset, endOffset, range} =  this.gtSelection.getStartAndEndNode();
+        let {startNode, endNode, startOffset, endOffset, range} =  this.gtSelection.getCursorInfo();
 
-        if(eventName == 'toolbar:stateValueChange' && startNode == endNode && endOffset - startOffset == 0){
+        if(eventName == 'toolbar:stateValueChange'){ // && startNode == endNode && endOffset - startOffset == 0
             this.gtSelection.restoreSelection(range);
         }
+
+        this.updateStateElements(state);
         
         return this;
     }
 
-
-
-
     /**
-     * @desc Get DOM element by state.
+     * @desc Update Element after state's status changed.
      * @param {GtState} state
-     * @returns {Element}
+     * @returns {GtToolbar}
      */
-    getStateElementByState(state){
-        return state && this.statesNodes[state.stateName];
+    updateStateElements(state){
+
+        let wrapperButtonsElement,
+            button;
+
+        wrapperButtonsElement = this.wrapperElement.querySelectorAll('[data-state-name="'+state.stateName+'"]')[0];
+
+        if(!wrapperButtonsElement){
+            return this;
+        }
+
+        if(this.hasClass(wrapperButtonsElement,'selection-group')){
+            let statesButtons = wrapperButtonsElement.getElementsByClassName('Button');
+            button = wrapperButtonsElement.querySelectorAll('[data-selection-index="'+ state.getCurrentIndex() +'"]')[0];
+            this.removeClass(statesButtons,'active');
+            this.addClass(button,'active');
+        }
+
+        if(this.hasClass(wrapperButtonsElement,'selection-cycler')){
+            button = wrapperButtonsElement.getElementsByClassName('Button')[0];
+            this.toggleClass(button,'active');
+        }
+
+        return this;
     }
-    
+
     /**
      * @param {Element} editorParentElement
      * @param {Array} [groupStates]
@@ -199,26 +214,10 @@ export class GtToolbar  extends GtEditor{
             return false;
         }
 
-        this.updateStateElements(parentSelectionElement, button );
+
         state.setCurrentIndex(newIndex);
         state.action('toolbar:stateValueChange');
     }
 
-    /**
-     * @desc Update Element after state's status changed.
-     * @param {Element} parentSelectionElement
-     * @param {Element} button
-     * @returns {GtToolbar}
-     */
-    updateStateElements(parentSelectionElement, button){
-        if(this.hasClass(parentSelectionElement,'selection-group')){
-            let statesButtons = parentSelectionElement.getElementsByClassName('Button');
-            this.removeClass(statesButtons,'active');
-            this.addClass(button,'active');
-        }
-        if(this.hasClass(parentSelectionElement,'selection-cycler')){
-            this.toggleClass(button,'active');
-        }
-        return this;
-    }
+
 }

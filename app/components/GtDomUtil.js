@@ -107,7 +107,7 @@ export class GtDomUtil extends GtEvent{
     hasStyle(node,key,value){
         // console.log('hasStyle');
         if(!node) return false;
-        return value ? node.style[key] == value : node.style[key] != '';
+        return node.style[key] == value;
     }
 
     /**
@@ -138,13 +138,14 @@ export class GtDomUtil extends GtEvent{
     /**
      *
      * @param {Element} node
+     * @param {Array} preventStyle
      * @param collection
      */
-    setStyleByCollection(node,collection){
-        let property;
-        for(property in collection){
-            if(collection.hasOwnProperty(property))
-                this.setStyle(node,property,collection[property]);
+    setStyleByCollection(node,collection,preventStyle){
+        let style;
+        for(style in collection){
+            if(collection.hasOwnProperty(style) && preventStyle.indexOf(style) == -1)
+                this.setStyle(node,style,collection[style].value);
         }
     }
 
@@ -191,6 +192,15 @@ export class GtDomUtil extends GtEvent{
     }
 
     /**
+     * 
+     * @param newNode
+     * @param referenceNode
+     */
+    insertAfter(newNode, referenceNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+    
+    /**
      *
      * @param {Element|Array} elements
      * @param {string} className
@@ -209,6 +219,10 @@ export class GtDomUtil extends GtEvent{
         }
 
         return this;
+    }
+
+    getStyleValue(node, key){
+        return node.style[key];
     }
 
     /**

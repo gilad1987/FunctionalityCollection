@@ -8,7 +8,8 @@ import { GtToolbar } from 'components/GtToolbar';
 
 let states = [
     new GtState('bold',true),
-    new GtState('textAlign',true)
+    new GtState('text-decoration',true),
+    new GtState('text-align',true)
 ];
 
 let toolbarTemplateStateData = {
@@ -33,7 +34,28 @@ let toolbarTemplateStateData = {
 
     },
 
-    'textAlign':{
+
+    'text-decoration':{
+        type:'toggle', // options --> toggle / group / list
+        style: {
+            key: "text-decoration",
+            values: ['', 'underline']
+        },
+        buttons: {
+            underline:{
+                nodeName:'button',
+                elementAttrs:{
+                    type:'button',
+                    title:'underline'
+                },
+
+                icon:'<span style="text-decoration: underline">U</span>'
+            }
+        }
+
+    },
+
+    'text-align':{
         type:'group', // options --> toggle / group / list
         style: {
             key: "text-align",
@@ -89,21 +111,25 @@ let toolbarFunctionalityCollection = new GtFunctionalityCollection();
 toolbarFunctionalityCollection.addStateCollection(states);
 let toolbar = new GtToolbar(toolbarFunctionalityCollection,null,toolbarTemplateStateData);
 
-let toolbar1FunctionalityCollection = new GtFunctionalityCollection();
-toolbar1FunctionalityCollection.addStateCollection(states);
-let toolbar1 = new GtToolbar(toolbar1FunctionalityCollection,null,toolbarTemplateStateData);
-
-let toolbar2FunctionalityCollection = new GtFunctionalityCollection();
-toolbar2FunctionalityCollection.addStateCollection( [states[0]] );
-let toolbar2 = new GtToolbar(toolbar2FunctionalityCollection,null,toolbarTemplateStateData);
 
 let editorStateCollection = new GtFunctionalityCollection();
 editorStateCollection.addStateCollection(states);
 let editor = new GtEditorContent(editorStateCollection,null,toolbarTemplateStateData);
 
-let editor2StateCollection = new GtFunctionalityCollection();
-editor2StateCollection.addStateCollection(states);
-let editor2 = new GtEditorContent(editor2StateCollection,null,toolbarTemplateStateData);
+
+//
+// let toolbar1FunctionalityCollection = new GtFunctionalityCollection();
+// toolbar1FunctionalityCollection.addStateCollection(states);
+// let toolbar1 = new GtToolbar(toolbar1FunctionalityCollection,null,toolbarTemplateStateData);
+//
+// let toolbar2FunctionalityCollection = new GtFunctionalityCollection();
+// toolbar2FunctionalityCollection.addStateCollection( [states[0]] );
+// let toolbar2 = new GtToolbar(toolbar2FunctionalityCollection,null,toolbarTemplateStateData);
+//
+// let editor2StateCollection = new GtFunctionalityCollection();
+// editor2StateCollection.addStateCollection(states);
+// let editor2 = new GtEditorContent(editor2StateCollection,null,toolbarTemplateStateData);
+
 
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -115,9 +141,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     editor.render(editorParentElement);
 
 
-    toolbar1.render(wrapper1);
-    editor2.render(wrapper1);
-    toolbar2.render(wrapper2);
+    // toolbar1.render(wrapper1);
+    // editor2.render(wrapper1);
+    // toolbar2.render(wrapper2);
 
 
   document.addEventListener('keydown',(event) => {

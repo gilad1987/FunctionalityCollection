@@ -14,6 +14,10 @@
   display: inline-block;
   border:1px solid transparent;
 
+  p{
+    margin:0;
+  }
+
   &.active{
     .ToolBar{
       opacity:1;
