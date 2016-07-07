@@ -107,7 +107,8 @@ export class GtDomUtil extends GtEvent{
     hasStyle(node,key,value){
         // console.log('hasStyle');
         if(!node) return false;
-        return node.style[key] == value;
+        let s = node.style[key];
+        return node.style[key] == value || (value=='' && typeof s == 'undefined');
     }
 
     /**
@@ -138,14 +139,17 @@ export class GtDomUtil extends GtEvent{
     /**
      *
      * @param {Element} node
-     * @param {Array} preventStyle
+     * @param {Array} [preventStyle]
      * @param collection
      */
     setStyleByCollection(node,collection,preventStyle){
         let style;
         for(style in collection){
-            if(collection.hasOwnProperty(style) && preventStyle.indexOf(style) == -1)
+            let _preventStyle = preventStyle && preventStyle.indexOf(style) != -1;
+            if(collection.hasOwnProperty(style) && !_preventStyle){
                 this.setStyle(node,style,collection[style].value);
+            }
+
         }
     }
 
@@ -202,7 +206,7 @@ export class GtDomUtil extends GtEvent{
     
     /**
      *
-     * @param {Element|Array} elements
+     * @param {Element|Array|NodeList} elements
      * @param {string} className
      * @returns {*}
      */
@@ -282,6 +286,50 @@ export class GtDomUtil extends GtEvent{
         }
         
         return this;
+    }
+
+    /**
+     *
+     * @param element
+     * @param startOffset
+     * @param endOffset
+     * @returns {{firstElement: Element, middleElement: Element|undefined, lastElement: Element}}
+     */
+    splitText(element, startOffset, endOffset) {
+
+        let nodeTextToSplit = element.firstChild,
+            length = nodeTextToSplit.length,
+            textStart,
+            textMiddle,
+            result,
+            textLast;
+
+        result = {
+            firstElement:element,
+            middleElement:null,
+            lastElement:element
+        };
+
+        if(startOffset > 0 && endOffset < length){
+            textStart = nodeTextToSplit.nodeValue.toString().substr(0,startOffset);
+            textMiddle = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
+            textLast = nodeTextToSplit.nodeValue.toString().substr(endOffset,nodeTextToSplit.length);
+            nodeTextToSplit.nodeValue = textStart;
+            result.middleElement = this.createNewNode('span',null,'wordwrapper',null,null,textMiddle);
+            result.lastElement = this.createNewNode('span',null,'wordwrapper',null,null,textLast);
+            this.insertAfter(result.middleElement, element);
+            this.insertAfter(result.lastElement, result.middleElement);
+        }
+
+        if(startOffset == 0 && endOffset < length){
+            textStart = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
+            textLast = nodeTextToSplit.nodeValue.toString().substr(endOffset,nodeTextToSplit.length);
+            nodeTextToSplit.nodeValue = textStart;
+            result.lastElement = this.createNewNode('span',null,'wordwrapper',null,null,textLast);
+            this.insertAfter(result.lastElement,element);
+        }
+
+        return result;
     }
     
 

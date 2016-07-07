@@ -7,14 +7,14 @@ import { GtEditorContent } from 'components/GtEditorContent';
 import { GtToolbar } from 'components/GtToolbar';
 
 let states = [
-    new GtState('bold',true),
+    new GtState('font-weight',true),
     new GtState('text-decoration',true),
     new GtState('text-align',true)
 ];
 
 let toolbarTemplateStateData = {
 
-    'bold':{
+    'font-weight':{
         type:'toggle', // options --> toggle / group / list
         style: {
             key: "font-weight",

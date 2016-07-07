@@ -40,10 +40,8 @@ export class GtToolbar  extends GtEditor{
      */
     onStateChange(state, eventName){
 
-        let {startNode, endNode, startOffset, endOffset, range} =  this.gtSelection.getCursorInfo();
-
         if(eventName == 'toolbar:stateValueChange'){ // && startNode == endNode && endOffset - startOffset == 0
-            this.gtSelection.restoreSelection(range);
+            this.gtSelection.restoreSelection( this.gtSelection.getCurrentRange() );
         }
 
         this.updateStateElements(state);
@@ -208,6 +206,10 @@ export class GtToolbar  extends GtEditor{
 
         if(this.hasClass(parentSelectionElement,'selection-group')){
             newIndex = button.dataset['selectionIndex'];
+        }
+
+        if(this.hasClass(parentSelectionElement,'selection-opener')){
+            //#TODO implement dropdown style option
         }
 
         if(newIndex == state.getCurrentIndex()){
