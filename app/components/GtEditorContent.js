@@ -27,12 +27,6 @@ export class GtEditorContent extends GtEditor{
         this.initCurrentStyle();
 
         /**
-         * @desc true when apply style in process
-         * @type {boolean}
-         */
-        this.inProcess = false;
-
-        /**
          * @type {GtSelection}
          */
         this.gtSelection = new GtSelection();
@@ -60,6 +54,9 @@ export class GtEditorContent extends GtEditor{
         let selection = new GtSelection();
         document.addEventListener('selectionchange',(event) => {
             let {startNode} = this.gtSelection.getCursorInfo();
+            if(startNode==null){
+                return false;
+            }
             let contentElement = startNode.closest('.content');
             if(contentElement !== this.editorContentElement){
                 return false;
@@ -110,7 +107,7 @@ export class GtEditorContent extends GtEditor{
 
 
         let {startNode} = this.gtSelection.getCursorInfo(),
-            state, stateData, newIndex, length, i = 0,currentStyleToUpdate;
+            stateData, newIndex, length, i = 0,currentStyleToUpdate;
 
         if(startNode.nodeName != 'SPAN'){
             return;
@@ -132,14 +129,6 @@ export class GtEditorContent extends GtEditor{
     
     checkIfSplitRequired(event){
         return   (this.isStyleChanged || event.keyCode == 13);
-    }
-
-    isBr(node){
-        return node && this.hasClass(node,'br');
-    }
-
-    isWordWrapper(node){
-        return node && this.hasClass(node,'wordwrapper');
     }
 
     setStyleToLine(lineElement){
@@ -178,9 +167,6 @@ export class GtEditorContent extends GtEditor{
         if(ctrl && [86,67,66,65,85,63].indexOf(key) == -1){
             return;
         }
-
-        this.inProcess = true;
-        // console.log('onKeyUp');
 
         if(!this.hasChildren(this.editorContentElement)){
 
@@ -228,7 +214,7 @@ export class GtEditorContent extends GtEditor{
             this.insertAfter(newlineElement, lineElement);
 
             this.gtSelection.addRange(lastElement);
-            this.gtSelection.setSelectionBefore(lastElement);
+            this.gtSelection.changeSelection(lastElement,true);
             this.gtSelection.addRange(lastElement);
             this.isStyleChanged = false;
         }
@@ -241,7 +227,7 @@ export class GtEditorContent extends GtEditor{
             this.insertAfter(wordwrapper, firstElement);
             // this.gtSelection.setSelectionAfter(firstElement);
             this.gtSelection.addRange(wordwrapper);
-            this.gtSelection.setSelectionAfter(wordwrapper);
+            this.gtSelection.changeSelection(wordwrapper);
 
         }
 
@@ -274,32 +260,6 @@ export class GtEditorContent extends GtEditor{
         this.setStyleByCollection( wordwrapper, this.currentStyle ,['text-align']);
     }
 
-    /**
-     * @desc Create new <span>\u200B<br></span>
-     * @returns {Range}
-     */
-    addBr(){
-        let wrapper = this.createBr();
-        return this.gtSelection.createNewRangeByNode(wrapper);
-    }
-
-    prepareBeforeCreateBr(setSelectionBefore){
-        let s = window.getSelection();
-        let r = s.getRangeAt(0);
-        let sc = r.startContainer;
-        let ec = r.endContainer;
-        let nodeToCheckIsBr = sc.nodeName == 'SPAN' ? sc : sc.parentNode;
-        let newRange;
-        if(setSelectionBefore){
-            newRange = this.gtSelection.setSelectionBefore(nodeToCheckIsBr);
-        }else{
-            newRange = this.gtSelection.setSelectionAfter(nodeToCheckIsBr);
-        }
-
-        return newRange;
-    }
-    
-
     getCurrentStyleByState(state){
         return{
             key:this.currentStyle[state.stateName].key,
@@ -316,6 +276,7 @@ export class GtEditorContent extends GtEditor{
             this.isStyleChanged = isStyleChanged;
             if(elementsToApplyStyle.length > 0){
                 this.applyStyle(this.getCurrentStyle(state) , elementsToApplyStyle);
+                //#TODO restore range
             }
         }
 
@@ -374,7 +335,6 @@ export class GtEditorContent extends GtEditor{
                     let isLast,
                         currentElement = lineElementOfStartNode;
 
-                    currentElement = lineElementOfStartNode;
                     do{
                         if(!this.hasStyle(currentElement,style.key,style.value)){
                             elementsToApplyStyle.push(currentElement);
@@ -394,7 +354,7 @@ export class GtEditorContent extends GtEditor{
 
                 }else{
 
-                    
+
 
                 }
 
@@ -415,10 +375,6 @@ export class GtEditorContent extends GtEditor{
 
     isStateOfLine(state){
         return state.stateName == 'text-align' || state.stateName == 'direction';
-    }
-
-    isLineStyle(style){
-        return style.key == 'text-align' || style.key == 'direction';
     }
 
     applyStyle(style, elements){

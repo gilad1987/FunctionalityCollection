@@ -11,29 +11,10 @@ export class GtSelection extends GtDomUtil{
     }
 
 
-    
-    getCurrentNode(){
-        let s = window.getSelection();
-        let r = s.getRangeAt(0);
-        return this.getParentNodeByRange(r);
-    }
-
     getCurrentRange(){
         let s = window.getSelection();
-        let r = s.getRangeAt(0);
-        return r;
+        return s.getRangeAt(0);
     }
-    /**
-     * @desc
-     * @param {Range} [range]
-     * @returns {Node}
-     */
-    getParentNodeByRange(range){
-        let s = window.getSelection();
-        let r = range ? range : s.getRangeAt(0);
-        return r.startContainer.nodeName == 'SPAN' ? r.startContainer : r.startContainer.parentNode;
-    }
-
 
     /**
      * @param {Range} [range]
@@ -42,6 +23,15 @@ export class GtSelection extends GtDomUtil{
     getCursorInfo(range){
         
         let s = window.getSelection();
+        if(s.type == 'None'){
+            return {
+                startNode :null,
+                endNode: null,
+                startOffset :0,
+                endOffset:0,
+                range:null
+            }
+        }
         let r = range ? range : s.getRangeAt(0);
         
         return {
@@ -53,32 +43,6 @@ export class GtSelection extends GtDomUtil{
         }
     }
 
-
-
-    /**
-     * @param {Element} node
-     * @param {boolean} [collapse]
-     * @returns {Range}
-     */
-    createNewRangeByNode(node,collapse){
-        let s = window.getSelection();
-        let r = s.getRangeAt(0);
-        let sc = r.startContainer;
-        let ec = r.endContainer;
-
-        r = r.cloneRange();
-        // r.deleteContents();
-        r.insertNode(node);
-
-        r.setStart(node.firstChild,0);
-        r.setEnd(node.firstChild,0);
-
-        s.removeAllRanges();
-        // console.log('createNewRangeByNode');
-        s.addRange(r);
-        
-        return r;
-    }
 
     isTextSelected(){
         let {startNode, endNode, startOffset, endOffset} =  this.getCursorInfo();
@@ -121,29 +85,16 @@ export class GtSelection extends GtDomUtil{
         }
     }
 
-
-    setSelectionBefore(node){
+    changeSelection(node,before){
         let s = window.getSelection();
         let r = s.getRangeAt(0);
         s.removeAllRanges();
         r = r.cloneRange();
-        r.setStartBefore(node);
-        s.addRange(r);
-        // console.log('setSelectionBefore');
-        return r;
-    }
-
-    setSelectionAfter(node,setStart){
-        let s = window.getSelection();
-        let r = s.getRangeAt(0);
-        s.removeAllRanges();
-        r = r.cloneRange();
-        r.setStartAfter(node);
-        if(setStart){
-            r.setStart(node,0);
-            r.setEnd(node,0);
+        if(before){
+            r.setStartBefore(node);
+        }else{
+            r.setStartAfter(node);
         }
-        // console.log('setSelectionAfter');
         s.addRange(r);
         return r;
     }

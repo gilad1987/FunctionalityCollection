@@ -5,7 +5,6 @@ export class GtEditor extends GtDomUtil{
     constructor(){
         super();
         this.editorElement = null;
-        this.range = null;
         this.functionalityCollection = null;
         this.templateStateData = null;
         this.currentStyle = {};

@@ -86,19 +86,6 @@ export class GtDomUtil extends GtEvent{
 
     /**
      *
-     * @param target
-     * @param nodeName
-     * @returns {Element}
-     */
-    getParentByNodeName(target,nodeName){
-        if(target.nodeName == nodeName){
-            return event.target;
-        }
-        return target.closest('button');
-    }
-
-    /**
-     *
      * @param {Element} node
      * @param {string} key
      * @param {string} [value]
@@ -151,26 +138,6 @@ export class GtDomUtil extends GtEvent{
             }
 
         }
-    }
-
-    /**
-     *
-     * @param {Element} node
-     * @param {object} collection
-     * @returns {boolean}
-     */
-    hasStyleCollection(node,collection){
-        let property,
-            hasStyleCollection = true;
-
-        for(property in collection){
-            if(collection.hasOwnProperty(property) && !this.hasStyle(node,property,collection[property])){
-                hasStyleCollection = false;
-                break;
-            }
-        }
-
-        return hasStyleCollection;
     }
 
     /**

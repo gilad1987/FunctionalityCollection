@@ -68,13 +68,13 @@ export class GtToolbar  extends GtEditor{
         if(this.hasClass(wrapperButtonsElement,'selection-group')){
             let statesButtons = wrapperButtonsElement.getElementsByClassName('Button');
             button = wrapperButtonsElement.querySelectorAll('[data-selection-index="'+ state.getCurrentIndex() +'"]')[0];
-            this.removeClass(statesButtons,'active');
-            this.addClass(button,'active');
+            this.removeClass(statesButtons,this.classNameButtonActive);
+            this.addClass(button,this.classNameButtonActive);
         }
 
         if(this.hasClass(wrapperButtonsElement,'selection-cycler')){
             button = wrapperButtonsElement.getElementsByClassName('Button')[0];
-            this.toggleClass(button,'active');
+            this.toggleClass(button,this.classNameButtonActive);
         }
 
         return this;
