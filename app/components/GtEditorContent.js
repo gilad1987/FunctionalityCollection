@@ -77,7 +77,7 @@ export class GtEditorContent extends GtEditor{
                     style['font-weight'] = 'bold';
                 }
                 if(current.text != 'br'){
-                    node = this.createNewNode('span', style, 'wordwrapper');
+                    node = this.createNewNode('span', style);
                     node.innerText = current.text;
                 }else{
                     node = this.createBr();
@@ -253,7 +253,7 @@ export class GtEditorContent extends GtEditor{
     }
 
     createNewWordwrapperElement(){
-        return this.createNewNode('span',null,'wordwrapper',null,null, "\u200B");
+        return this.createNewNode('span',null,null,null,null, "\u200B");
     }
 
     setStyleWordwrapper(wordwrapper){

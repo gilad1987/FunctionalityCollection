@@ -44,7 +44,7 @@ export class GtToolbar  extends GtEditor{
             this.gtSelection.restoreSelection( this.gtSelection.getCurrentRange() );
         }
 
-        this.updateStateElements(state);
+        this.updateToolBarElements(state);
         
         return this;
     }
@@ -54,7 +54,7 @@ export class GtToolbar  extends GtEditor{
      * @param {GtState} state
      * @returns {GtToolbar}
      */
-    updateStateElements(state){
+    updateToolBarElements(state){
 
         let wrapperButtonsElement,
             button;

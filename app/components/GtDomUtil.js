@@ -282,8 +282,8 @@ export class GtDomUtil extends GtEvent{
             textMiddle = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
             textLast = nodeTextToSplit.nodeValue.toString().substr(endOffset,nodeTextToSplit.length);
             nodeTextToSplit.nodeValue = textStart;
-            result.middleElement = this.createNewNode('span',null,'wordwrapper',null,null,textMiddle);
-            result.lastElement = this.createNewNode('span',null,'wordwrapper',null,null,textLast);
+            result.middleElement = this.createNewNode('span',null,null,null,null,textMiddle);
+            result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
             this.insertAfter(result.middleElement, element);
             this.insertAfter(result.lastElement, result.middleElement);
         }
@@ -292,7 +292,7 @@ export class GtDomUtil extends GtEvent{
             textStart = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
             textLast = nodeTextToSplit.nodeValue.toString().substr(endOffset,nodeTextToSplit.length);
             nodeTextToSplit.nodeValue = textStart;
-            result.lastElement = this.createNewNode('span',null,'wordwrapper',null,null,textLast);
+            result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
             this.insertAfter(result.lastElement,element);
         }
 
