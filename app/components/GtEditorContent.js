@@ -332,8 +332,7 @@ export class GtEditorContent extends GtEditor{
                     lineElementOfStartNode = this.getLineElement(startNode);
                     lineElementOfEndNode = this.getLineElement(endNode);
 
-                    let isLast,
-                        currentElement = lineElementOfStartNode;
+                    let currentElement = lineElementOfStartNode;
 
                     do{
 
