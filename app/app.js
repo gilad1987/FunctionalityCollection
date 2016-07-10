@@ -9,6 +9,7 @@ import { GtToolbar } from 'components/GtToolbar';
 let states = [
     new GtState('font-weight',true),
     new GtState('text-decoration',true),
+    new GtState('font-style',true),
     new GtState('text-align',true)
 ];
 
@@ -29,6 +30,26 @@ let toolbarTemplateStateData = {
                 },
 
                 icon:'<span style="font-weight: 700">B</span>'
+            }
+        }
+
+    },
+
+    'font-style':{
+        type:'toggle', // options --> toggle / group / list
+        style: {
+            key: "font-style",
+            values: ['', 'italic']
+        },
+        buttons: {
+            italic:{
+                nodeName:'button',
+                elementAttrs:{
+                    type:'button',
+                    title:'italic'
+                },
+
+                icon:'<span style="font-style: italic">I</span>'
             }
         }
 

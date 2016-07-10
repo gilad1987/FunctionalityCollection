@@ -257,12 +257,13 @@ export class GtDomUtil extends GtEvent{
 
     /**
      *
-     * @param element
-     * @param startOffset
-     * @param endOffset
+     * @param {Element} element
+     * @param {Number} startOffset
+     * @param {Number} [endOffset]
+     * @param {boolean} [cloneStyle]
      * @returns {{firstElement: Element, middleElement: Element|undefined, lastElement: Element}}
      */
-    splitText(element, startOffset, endOffset) {
+    splitText(element, startOffset, endOffset, cloneStyle) {
 
         let nodeTextToSplit = element.firstChild,
             length = nodeTextToSplit.length,
@@ -270,6 +271,8 @@ export class GtDomUtil extends GtEvent{
             textMiddle,
             result,
             textLast;
+
+        endOffset = endOffset ? endOffset : length;
 
         result = {
             firstElement:element,
@@ -284,20 +287,70 @@ export class GtDomUtil extends GtEvent{
             nodeTextToSplit.nodeValue = textStart;
             result.middleElement = this.createNewNode('span',null,null,null,null,textMiddle);
             result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
+
+            if(cloneStyle){
+                this.cloneStyle(element,result.middleElement);
+                this.cloneStyle(element,result.lastElement);
+            }
+
             this.insertAfter(result.middleElement, element);
             this.insertAfter(result.lastElement, result.middleElement);
         }
 
-        if(startOffset == 0 && endOffset < length){
+        if(startOffset == 0 &&  endOffset < length){
             textStart = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
             textLast = nodeTextToSplit.nodeValue.toString().substr(endOffset,nodeTextToSplit.length);
             nodeTextToSplit.nodeValue = textStart;
             result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
+            if(cloneStyle){
+                this.cloneStyle(element,result.lastElement);
+            }
+            this.insertAfter(result.lastElement,element);
+        }
+
+        if(startOffset>0 && endOffset==length){
+            textStart = nodeTextToSplit.nodeValue.toString().substr(0,startOffset);
+            textLast = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
+            nodeTextToSplit.nodeValue = textStart;
+            result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
+            if(cloneStyle){
+                this.cloneStyle(element,result.lastElement);
+            }
             this.insertAfter(result.lastElement,element);
         }
 
         return result;
     }
     
+    getAllNodes(startNode, endNode ){
+
+        let nodes = [];
+        
+        var getNextNode = function(node, endNode, parentNodes){
+
+            if(node==null){
+                return  getNextNode(parentNodes.parentNode.nextSibling ,  endNode, parentNodes.parentNode);
+            }
+
+            if (endNode == node) {
+                return null;
+            }
+
+            if (node.firstChild && node.firstChild.nodeType != 3) {
+                return node.firstChild;
+            }
+
+            return node.nextSibling || getNextNode(node.parentNode.nextSibling ,  endNode, node.parentNode);
+        };
+
+        do {
+            if(startNode.nodeName == 'SPAN'){
+                nodes.push(startNode);
+            }
+        }
+        while ( startNode = getNextNode(startNode, endNode) );
+        
+        return nodes;
+    }
 
 }

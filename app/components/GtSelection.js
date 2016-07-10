@@ -54,8 +54,8 @@ export class GtSelection extends GtDomUtil{
             selection = window.getSelection();
 
         range.selectNode(startNode);
-        range.setStart(startNode.firstChild,0);
-        range.setEnd(startNode.firstChild,0);
+        range.setStart(startNode.firstChild ? startNode.firstChild :startNode,0);
+        range.setEnd(startNode.firstChild ? startNode.firstChild :startNode,0);
         
         selection.removeAllRanges();
         // console.log('addRange');

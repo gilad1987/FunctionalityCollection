@@ -82,7 +82,7 @@ export class GtEditor extends GtDomUtil{
      * @param node
      * @returns {Array}
      */
-    compareCurrentStyleWithStyleElement(node){
+    compareCurrentStyle(node){
         let style,
             elementToCompare,
             stylesNotEqual;

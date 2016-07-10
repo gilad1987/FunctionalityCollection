@@ -92,7 +92,7 @@ export class GtEditorContent extends GtEditor{
         frag.appendChild(this.editorContentElement);
         this.wrapperElement.appendChild(frag);
 
-        // this.editorContentElement.innerHTML = '<p><span class="wordwrapper">moshe</span><span class="wordwrapper">gilad</span><span class="wordwrapper">moshe</span><span class="wordwrapper">gilad</span></p><p><span class="wordwrapper">yael</span><span class="wordwrapper">aviadASDASDAan</span></p>'
+        this.editorContentElement.innerHTML = '<p style="text-align: left;"><span style="font-weight: 300;">moshe</span><span style="font-weight: 300; text-decoration: underline;">​gilad</span><span style="font-weight: 700; text-decoration: underline;">​takoni</span></p><p style="text-align: left;"><span style="font-weight: 700; text-decoration: underline;">jermi</span><span style="font-weight: 700;">​as</span></p><p style="text-align: left;"><span style="font-weight: 700;">chanie</span><span style="font-weight: 300;">​edri</span></p><ul><li><ul><li><span style="font-weight: 300;">asd</span><span style="font-weight: 700;">​ariel</span></li></ul></li></ul> <p style="text-align: left;"><span style="font-weight: 700;">gilad</span><span style="font-weight: 700; text-decoration: underline;">​takoni</span></p><p style="text-align: left;"><span style="font-weight: 700; text-decoration: underline;">sara</span><span style="font-weight: 300; text-decoration: underline;">​blumental</span><span style="font-weight: 300;">​alexmayler</span><span style="font-weight: 300;">​</span></p>';
 
         return this;
     }
@@ -113,7 +113,7 @@ export class GtEditorContent extends GtEditor{
             return;
         }
         
-        let stylesNotEqual = this.compareCurrentStyleWithStyleElement(startNode);
+        let stylesNotEqual = this.compareCurrentStyle(startNode);
         
         if(length = stylesNotEqual.length){
             for(;i<length;i++){
@@ -139,7 +139,7 @@ export class GtEditorContent extends GtEditor{
 
         //#TODO implement when user press delete and cursor in offset == 0 in wordwrapper element
 
-        if(this.editorContentElementInit && !this.isStyleChanged){
+        if(this.editorContentElementInit &&  !this.isStyleChanged){ //#TODO add no enter key==13
             return;
         }
         
@@ -178,7 +178,6 @@ export class GtEditorContent extends GtEditor{
             this.setStyleToLine(lineElement);
             this.gtSelection.addRange(wordwrapper);
             this.editorContentElementInit = true;
-            this.inProcess = false;
             return;
         }
 
@@ -192,6 +191,7 @@ export class GtEditorContent extends GtEditor{
         if(event.keyCode == 13){
             let {firstElement, lastElement} = this.splitText(startNode,0,endOffset);
 
+            this.cloneStyle(firstElement,lastElement);
             let newlineElement = this.createNewLine();
             this.setStyleToLine(newlineElement);
 
@@ -201,14 +201,13 @@ export class GtEditorContent extends GtEditor{
                 frag = document.createDocumentFragment();
 
             nextElement = lastElement;
+            lineElement = this.getLineElement(firstElement);
 
             do{
                 currentElement = nextElement;
-                nextElement = nextElement.nextElementSibling;
+                nextElement = currentElement.nextElementSibling;
                 frag.appendChild(currentElement);
             }while(nextElement);
-
-            lineElement = this.getLineElement(firstElement);
 
             newlineElement.appendChild(frag);
             this.insertAfter(newlineElement, lineElement);
@@ -225,7 +224,6 @@ export class GtEditorContent extends GtEditor{
             let wordwrapper = this.createNewWordwrapperElement();
             this.setStyleWordwrapper(wordwrapper);
             this.insertAfter(wordwrapper, firstElement);
-            // this.gtSelection.setSelectionAfter(firstElement);
             this.gtSelection.addRange(wordwrapper);
             this.gtSelection.changeSelection(wordwrapper);
 
@@ -260,7 +258,7 @@ export class GtEditorContent extends GtEditor{
         this.setStyleByCollection( wordwrapper, this.currentStyle ,['text-align']);
     }
 
-    getCurrentStyleByState(state){
+    getCurrentStyle(state){
         return{
             key:this.currentStyle[state.stateName].key,
             value:this.currentStyle[state.stateName].value
@@ -285,11 +283,12 @@ export class GtEditorContent extends GtEditor{
     checkBeforeApplyStyle(state){
 
         let {startNode, endNode, startOffset, endOffset, range} =  this.gtSelection.getCursorInfo();
+
         let lineElementOfStartNode,
             lineElementOfEndNode,
             isStyleChanged = false,
             isStateLine = this.isStateOfLine(state),
-            style = this.getCurrentStyleByState(state),
+            style = this.getCurrentStyle(state),
             elementsToApplyStyle = [];
 
         if(!this.gtSelection.isTextSelected()){
@@ -342,7 +341,7 @@ export class GtEditorContent extends GtEditor{
 
                         currentElement = currentElement.nextElementSibling;
 
-                        isLast = currentElement === lineElementOfEndNode;
+                        isLast = ( currentElement === lineElementOfEndNode );
 
                         if(isLast){
                             if(!this.hasStyle(currentElement,style.key,style.value)){
@@ -352,9 +351,13 @@ export class GtEditorContent extends GtEditor{
 
                     }while (!isLast);
 
+
                 }else{
 
+                    startNode = this.splitText(startNode,0,startOffset,true)['lastElement'];
+                    endNode = this.splitText(endNode, 0, endOffset, true)['firstElement'];
 
+                    elementsToApplyStyle = this.getAllNodes(startNode, endNode);
 
                 }
 
