@@ -104,7 +104,6 @@ export class GtEditorContent extends GtEditor{
             return;
         }
 
-
         let {startNode} = this.gtSelection.getCursorInfo(),
             stateData, newIndex, length, i = 0,currentStyleToUpdate;
 
