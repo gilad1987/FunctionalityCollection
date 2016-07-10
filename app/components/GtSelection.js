@@ -63,6 +63,19 @@ export class GtSelection extends GtDomUtil{
 
         return range;
     }
+    
+    updateRange(stateNode,endNode,startOffset,endOffset){
+        let range = document.createRange(),
+            selection = window.getSelection();
+
+        range.setStart(stateNode,startOffset);
+        range.setEnd(endNode,endOffset);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        return range;
+    }
 
     restoreSelection(range,deleteContent,startOffset,endOffset) {
         if (range) {

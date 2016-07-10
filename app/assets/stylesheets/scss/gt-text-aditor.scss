@@ -3,12 +3,6 @@
 .italic{font-style: italic;}
 
 [contenteditable="true"]{outline: none;}
-.content{
-  overflow: auto;
-  display: inline-block;
-  min-width: 200px;
-  min-height: 150px;
-}
 
 .GtTextEditor{
   display: inline-block;
@@ -33,19 +27,30 @@
 
     .content{
       resize: both;
+      width:100%;
+      overflow: auto;
+      display: inline-block;
+      min-width: 200px;
+      min-height: 150px;
     }
   }
 
   .ToolBar{
     background-color: #F0F0F0;
-    padding: 10px 10px 7px;
+    padding: 10px;
     margin-left: 0px;
     border: 1px solid #EEE;
     opacity:0;
+    overflow: hidden;
 
     .ButtonGroup{
       overflow: hidden;
-      display: inline-block;
+      float: left;
+      margin-right:5px;
+
+      &:first-child,&:last-child{
+        margin:0;
+      }
 
       .gt-toolbar-selection:first-child {
 
@@ -60,13 +65,17 @@
       }
 
       .gt-toolbar-selection {
-        display: inline-block;
+        display: block;
+        float: left;
+
         ul{
           padding: 0;
           margin:0;
+          overflow: hidden;
 
           li{
-            display: inline-block;
+            display: block;
+            float:left;
           }
         }
       }

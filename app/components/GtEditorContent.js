@@ -64,7 +64,7 @@ export class GtEditorContent extends GtEditor{
             this.onSelectionchange(event);
         });
 
-        if(textForInit){
+        if(false){
             for(let i=0;i<textForInit.length; i++){
                 let current = textForInit[i];
                 let style = {};
@@ -100,7 +100,6 @@ export class GtEditorContent extends GtEditor{
     onSelectionchange(event){
 
 
-        //#TODO check if inProcess needed
         if(this.isStyleChanged){
             return;
         }
@@ -243,7 +242,8 @@ export class GtEditorContent extends GtEditor{
      * @returns {*}
      */
     getLineElement(element){
-        return element.closest('p');
+        //#TODO change closest ul element
+        return element.closest('p') || element.closest('ul');
     }
 
     createNewLine(isNotEmpty){
@@ -270,10 +270,11 @@ export class GtEditorContent extends GtEditor{
         this.updateCurrentStyleByState(state);
 
         if(eventName == 'toolbar:stateValueChange'){
-            let {isStyleChanged, elementsToApplyStyle} = this.checkBeforeApplyStyle(state);
+            let {isStyleChanged, elementsToApplyStyle, startNode, endNode,  endOffset} = this.checkBeforeApplyStyle(state);
             this.isStyleChanged = isStyleChanged;
             if(elementsToApplyStyle.length > 0){
                 this.applyStyle(this.getCurrentStyle(state) , elementsToApplyStyle);
+                this.gtSelection.updateRange(startNode, endNode, 0, endOffset);
                 //#TODO restore range
             }
         }
@@ -335,21 +336,12 @@ export class GtEditorContent extends GtEditor{
                         currentElement = lineElementOfStartNode;
 
                     do{
+
                         if(!this.hasStyle(currentElement,style.key,style.value)){
                             elementsToApplyStyle.push(currentElement);
                         }
 
-                        currentElement = currentElement.nextElementSibling;
-
-                        isLast = ( currentElement === lineElementOfEndNode );
-
-                        if(isLast){
-                            if(!this.hasStyle(currentElement,style.key,style.value)){
-                                elementsToApplyStyle.push(currentElement);
-                            }
-                        }
-
-                    }while (!isLast);
+                    }while (currentElement !== lineElementOfEndNode && ( currentElement = currentElement.nextElementSibling ));
 
 
                 }else{
@@ -368,7 +360,11 @@ export class GtEditorContent extends GtEditor{
 
         return {
             isStyleChanged : isStyleChanged,
-            elementsToApplyStyle:elementsToApplyStyle
+            elementsToApplyStyle:elementsToApplyStyle,
+            startNode:startNode.firstChild,
+            endNode: endNode.firstChild,
+            endOffset:endOffset,
+            startOffset :0
         };
     }
 
