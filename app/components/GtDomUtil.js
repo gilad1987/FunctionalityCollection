@@ -280,44 +280,33 @@ export class GtDomUtil extends GtEvent{
             lastElement:element
         };
 
-        if(startOffset > 0 && endOffset < length){
-            textStart = nodeTextToSplit.nodeValue.toString().substr(0,startOffset);
-            textMiddle = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
-            textLast = nodeTextToSplit.nodeValue.toString().substr(endOffset,nodeTextToSplit.length);
-            nodeTextToSplit.nodeValue = textStart;
-            result.middleElement = this.createNewNode('span',null,null,null,null,textMiddle);
-            result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
 
+        if( (startOffset == 0 && endOffset==0) || (endOffset==length && startOffset==length) || ( (endOffset-startOffset) == length )){
+            return result;
+        }
+
+        textStart = nodeTextToSplit.nodeValue.toString().substr(0,startOffset>0 ? startOffset : endOffset);
+        if(startOffset>0 && endOffset<length){
+            textMiddle = nodeTextToSplit.nodeValue.toString().substr(startOffset, (endOffset-startOffset) );
+            result.middleElement = this.createNewNode('span',null,null,null,null,textMiddle);
             if(cloneStyle){
                 this.cloneStyle(element,result.middleElement);
-                this.cloneStyle(element,result.lastElement);
             }
-
             this.insertAfter(result.middleElement, element);
-            this.insertAfter(result.lastElement, result.middleElement);
+            element = result.middleElement;
+            startOffset += endOffset-startOffset;
         }
 
-        if(startOffset == 0 &&  endOffset < length){
-            textStart = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
-            textLast = nodeTextToSplit.nodeValue.toString().substr(endOffset,nodeTextToSplit.length);
-            nodeTextToSplit.nodeValue = textStart;
-            result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
-            if(cloneStyle){
-                this.cloneStyle(element,result.lastElement);
-            }
-            this.insertAfter(result.lastElement,element);
+        startOffset = startOffset >  0 ? startOffset : endOffset;
+        endOffset = startOffset > 0 ? (length - startOffset) : (length - endOffset);
+        textLast = nodeTextToSplit.nodeValue.toString().substr(startOffset, endOffset );
+        result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
+        if(cloneStyle){
+            this.cloneStyle(element,result.lastElement);
         }
+        this.insertAfter(result.lastElement, element);
 
-        if(startOffset>0 && endOffset==length){
-            textStart = nodeTextToSplit.nodeValue.toString().substr(0,startOffset);
-            textLast = nodeTextToSplit.nodeValue.toString().substr(startOffset,endOffset);
-            nodeTextToSplit.nodeValue = textStart;
-            result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
-            if(cloneStyle){
-                this.cloneStyle(element,result.lastElement);
-            }
-            this.insertAfter(result.lastElement,element);
-        }
+        nodeTextToSplit.nodeValue = textStart;
 
         return result;
     }
