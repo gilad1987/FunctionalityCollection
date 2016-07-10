@@ -269,12 +269,13 @@ export class GtEditorContent extends GtEditor{
         this.updateCurrentStyleByState(state);
 
         if(eventName == 'toolbar:stateValueChange'){
-            let {isStyleChanged, elementsToApplyStyle, startNode, endNode,  endOffset} = this.checkBeforeApplyStyle(state);
+            let {isStyleChanged, elementsToApplyStyle, startNode, endNode,  endOffset, restoreRange} = this.checkBeforeApplyStyle(state);
             this.isStyleChanged = isStyleChanged;
             if(elementsToApplyStyle.length > 0){
                 this.applyStyle(this.getCurrentStyle(state) , elementsToApplyStyle);
-                this.gtSelection.updateRange(startNode, endNode, 0, endOffset);
-                //#TODO restore range
+                if(restoreRange){
+                    this.gtSelection.updateRange(startNode, endNode, 0, endOffset);
+                }
             }
         }
 
@@ -287,6 +288,7 @@ export class GtEditorContent extends GtEditor{
         let lineElementOfStartNode,
             lineElementOfEndNode,
             isStyleChanged = false,
+            restoreRange = false,
             isStateLine = this.isStateOfLine(state),
             style = this.getCurrentStyle(state),
             elementsToApplyStyle = [];
@@ -306,6 +308,7 @@ export class GtEditorContent extends GtEditor{
             if(startNode===endNode){
 
                 let {firstElement,middleElement, lastElement} = this.splitText(startNode,startOffset,endOffset);
+                restoreRange=true;
 
                 if(isStateLine){
                     elementsToApplyStyle.push( firstElement );
@@ -346,6 +349,7 @@ export class GtEditorContent extends GtEditor{
 
                     startNode = this.splitText(startNode,0,startOffset,true)['lastElement'];
                     endNode = this.splitText(endNode, 0, endOffset, true)['firstElement'];
+                    restoreRange=true;
 
                     elementsToApplyStyle = this.getAllNodes(startNode, endNode);
 
@@ -362,7 +366,8 @@ export class GtEditorContent extends GtEditor{
             startNode:startNode.firstChild,
             endNode: endNode.firstChild,
             endOffset:endOffset,
-            startOffset :0
+            startOffset :0,
+            restoreRange:restoreRange
         };
     }
 
