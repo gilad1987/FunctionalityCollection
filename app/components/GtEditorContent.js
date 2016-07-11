@@ -64,31 +64,6 @@ export class GtEditorContent extends GtEditor{
             this.onSelectionchange(event);
         });
 
-        if(false){
-            for(let i=0;i<textForInit.length; i++){
-                let current = textForInit[i];
-                let style = {};
-                let node;
-
-                if(current.italic){
-                    style['font-style'] = 'italic';
-                }
-                if(current.bold){
-                    style['font-weight'] = 'bold';
-                }
-                if(current.text != 'br'){
-                    node = this.createNewNode('span', style);
-                    node.innerText = current.text;
-                }else{
-                    node = this.createBr();
-                }
-
-                this.editorContentElement.appendChild(node);
-            }
-        }
-
-
-
         frag.appendChild(this.editorContentElement);
         this.wrapperElement.appendChild(frag);
 
@@ -188,22 +163,25 @@ export class GtEditorContent extends GtEditor{
 
         
         //#TODO fix bug when press enter and cursor in and of the line
+
         // keyCode 13 -> Enter key
         if(event.keyCode == 13){
             let {firstElement, lastElement} = this.splitText(startNode,0,endOffset);
             let nextElement,
                 currentElement,
                 newlineElement,
-                lineElement,
+                startNodeLineElement,
                 frag = document.createDocumentFragment();
 
-            this.cloneStyle(firstElement,lastElement);
-            newlineElement = this.createNewLine();
-            this.setStyleToLine(newlineElement);
+            //#TODO rewrite this part
+            
+            startNodeLineElement = this.getLineElement(firstElement);
+
+            if(firstElement!==lastElement){
+                this.cloneStyle(firstElement,lastElement);
+            }
 
             nextElement = lastElement;
-            lineElement = this.getLineElement(firstElement);
-
             do{
                 currentElement = nextElement;
                 nextElement = currentElement.nextElementSibling;
@@ -212,8 +190,20 @@ export class GtEditorContent extends GtEditor{
                 }
             }while(nextElement);
 
+            if(lastElement.innerText == "" || lastElement.innerText == " "){
+                lastElement.innerText = "\u200B";
+            }
+
+
+
+            newlineElement = this.createNewLine();
+            this.setStyleToLine(newlineElement);
+
             newlineElement.appendChild(frag);
-            this.insertAfter(newlineElement, lineElement);
+            this.insertAfter(newlineElement, startNodeLineElement);
+            if(startNodeLineElement.childNodes.length == 0){
+                startNodeLineElement.appendChild( this.cloneStyle( firstElement, this.createNewWordwrapperElement() ) );
+            }
             this.gtSelection.updateRange(lastElement);
 
             this.isStyleChanged = false;

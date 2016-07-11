@@ -252,7 +252,7 @@ export class GtDomUtil extends GtEvent{
             key++;
         }
         
-        return this;
+        return node;
     }
 
     /**
@@ -305,10 +305,10 @@ export class GtDomUtil extends GtEvent{
         textLast = nodeTextToSplit.nodeValue.toString().substr(startOffset, endOffset );
         lastElement = this.createNewNode('span',null,null,null,null,textLast);
 
-        // if sprate word and last char is " " (only space)
-        if(lastElement.innerText == " "){
-            return result;
-        }
+        // if seprate word and last char is " " (only space)
+        // if(lastElement.innerText == " "){
+        //     return result;
+        // }
 
         result.lastElement = lastElement;
 
