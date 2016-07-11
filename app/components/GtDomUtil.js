@@ -269,6 +269,7 @@ export class GtDomUtil extends GtEvent{
             length = nodeTextToSplit.length,
             textStart,
             textMiddle,
+            lastElement,
             result,
             textLast;
 
@@ -297,10 +298,20 @@ export class GtDomUtil extends GtEvent{
             startOffset += endOffset-startOffset;
         }
 
+
+
         startOffset = startOffset >  0 ? startOffset : endOffset;
         endOffset = startOffset > 0 ? (length - startOffset) : (length - endOffset);
         textLast = nodeTextToSplit.nodeValue.toString().substr(startOffset, endOffset );
-        result.lastElement = this.createNewNode('span',null,null,null,null,textLast);
+        lastElement = this.createNewNode('span',null,null,null,null,textLast);
+
+        // if sprate word and last char is " " (only space)
+        if(lastElement.innerText == " "){
+            return result;
+        }
+
+        result.lastElement = lastElement;
+
         if(cloneStyle){
             this.cloneStyle(element,result.lastElement);
         }

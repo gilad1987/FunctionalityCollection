@@ -186,18 +186,20 @@ export class GtEditorContent extends GtEditor{
 
         let {startNode, endNode, startOffset, endOffset} = this.gtSelection.getCursorInfo();
 
+        
+        //#TODO fix bug when press enter and cursor in and of the line
         // keyCode 13 -> Enter key
         if(event.keyCode == 13){
             let {firstElement, lastElement} = this.splitText(startNode,0,endOffset);
-
-            this.cloneStyle(firstElement,lastElement);
-            let newlineElement = this.createNewLine(true);
-            this.setStyleToLine(newlineElement);
-
             let nextElement,
                 currentElement,
+                newlineElement,
                 lineElement,
                 frag = document.createDocumentFragment();
+
+            this.cloneStyle(firstElement,lastElement);
+            newlineElement = this.createNewLine();
+            this.setStyleToLine(newlineElement);
 
             nextElement = lastElement;
             lineElement = this.getLineElement(firstElement);
@@ -205,15 +207,15 @@ export class GtEditorContent extends GtEditor{
             do{
                 currentElement = nextElement;
                 nextElement = currentElement.nextElementSibling;
-                frag.appendChild(currentElement);
+                if(currentElement){
+                    frag.appendChild(currentElement);
+                }
             }while(nextElement);
 
             newlineElement.appendChild(frag);
             this.insertAfter(newlineElement, lineElement);
+            this.gtSelection.updateRange(lastElement);
 
-            this.gtSelection.addRange(lastElement);
-            this.gtSelection.changeSelection(lastElement,true);
-            this.gtSelection.addRange(lastElement);
             this.isStyleChanged = false;
         }
 
@@ -223,12 +225,11 @@ export class GtEditorContent extends GtEditor{
             let wordwrapper = this.createNewWordwrapperElement();
             this.setStyleWordwrapper(wordwrapper);
             this.insertAfter(wordwrapper, firstElement);
-            this.gtSelection.addRange(wordwrapper);
-            this.gtSelection.changeSelection(wordwrapper);
-
+            this.gtSelection.updateRange(wordwrapper.firstChild,null,0,1);
         }
 
         this.isStyleChanged = false;
+
         if(event.keyCode == 13){
             event.preventDefault();
             return false;

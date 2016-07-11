@@ -56,20 +56,24 @@ export class GtSelection extends GtDomUtil{
         range.selectNode(startNode);
         range.setStart(startNode.firstChild ? startNode.firstChild :startNode,0);
         range.setEnd(startNode.firstChild ? startNode.firstChild :startNode,0);
-        
+
         selection.removeAllRanges();
         // console.log('addRange');
         selection.addRange(range);
 
         return range;
     }
-    
-    updateRange(stateNode,endNode,startOffset,endOffset){
+
+    updateRange(startNode,endNode,startOffset,endOffset){
         let range = document.createRange(),
             selection = window.getSelection();
 
-        range.setStart(stateNode,startOffset);
-        range.setEnd(endNode,endOffset);
+        endNode = endNode ? endNode : startNode;
+        startOffset = startOffset ? startOffset : 0;
+        endOffset = endOffset ? endOffset : 0;
+
+        range.setStart(startNode ? startNode : startNode, startOffset);
+        range.setEnd(endNode ? endNode : endNode, endOffset);
 
         selection.removeAllRanges();
         selection.addRange(range);
