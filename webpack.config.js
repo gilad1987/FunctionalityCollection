@@ -9,7 +9,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const appPath           = path.join(__dirname, 'app');
 const distPath          = path.join(__dirname, 'dist');
 const exclude           = /node_modules/;
-const EnableExtractTextPlugin    = true;
+const EnableExtractTextPlugin    = false;
 
 function getENVReplacements() {
   const replacements = {}; //environmentsFile[process.env.NODE_ENV];

@@ -107,7 +107,13 @@ export class GtDomUtil extends GtEvent{
      */
     setStyle(node,key,value){
         if(!node) return;
-        node.style[key] = value;
+        let suffix='';
+
+        if(key=='font-size'){
+            suffix = 'px';
+        }
+
+        node.style[key] = value+suffix;
         return this;
     }
 
@@ -133,6 +139,7 @@ export class GtDomUtil extends GtEvent{
         let style;
         for(style in collection){
             let _preventStyle = preventStyle && preventStyle.indexOf(style) != -1;
+
             if(collection.hasOwnProperty(style) && !_preventStyle){
                 this.setStyle(node,style,collection[style].value);
             }

@@ -118,4 +118,11 @@ export class GtEditor extends GtDomUtil{
     onStateChange(state){
         console.log('Abstract Callback - GtEditor:onStateChange - no implement');
     }
+
+    getCurrentStyle(state){
+        return{
+            key:this.currentStyle[state.stateName].key,
+            value:this.currentStyle[state.stateName].value
+        }
+    }
 }

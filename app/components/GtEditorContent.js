@@ -254,12 +254,7 @@ export class GtEditorContent extends GtEditor{
         this.setStyleByCollection( wordwrapper, this.currentStyle ,['text-align']);
     }
 
-    getCurrentStyle(state){
-        return{
-            key:this.currentStyle[state.stateName].key,
-            value:this.currentStyle[state.stateName].value
-        }
-    }
+
 
     onStateChange(state, eventName){
 

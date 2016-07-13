@@ -10,6 +10,7 @@ let states = [
     new GtState('font-weight',true),
     new GtState('text-decoration',true),
     new GtState('font-style',true),
+    new GtState('font-size',true),
     new GtState('text-align',true)
 ];
 
@@ -76,6 +77,43 @@ let toolbarTemplateStateData = {
 
     },
 
+    'font-size':{
+        type:'list', // options --> toggle / group / list
+        label:'size',
+        style: {
+            key: "font-size",
+            values: (function(){
+                let sizes = [];
+                for(let i=10;i<50;i++){
+                    if(i%2==0){
+                        sizes.push(i);
+                    }
+                }
+                return sizes;
+            })()
+        },
+        buttons: (function(){
+          let buttons = {};
+
+            for(let i=10;i<50;i++){
+                if(i%2==0){
+                    buttons[i] = {
+                        nodeName:'button',
+                        elementAttrs:{
+                            type:'button',
+                            title:'font-size: '+i+'px'
+                        },
+
+                        icon:i
+                    };
+                }
+            }
+
+            return buttons;
+        })()
+
+    },
+
     'text-align':{
         type:'group', // options --> toggle / group / list
         style: {
@@ -124,6 +162,7 @@ let toolbarTemplateStateData = {
 
     }
 };
+
 
 
 
