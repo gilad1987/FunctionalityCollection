@@ -310,9 +310,22 @@ export class GtEditorContent extends GtEditor{
 
                     let {firstElement,middleElement, lastElement} = this.splitText(startNode,startOffset,endOffset, true);
                     restoreRange = (firstElement!==lastElement);
-                    if(middleElement){
-                        startNode = middleElement;
-                        endNode = middleElement;
+
+                    if(restoreRange){
+
+                        if(middleElement){
+                            startNode = middleElement;
+                            endNode = middleElement;
+                        }else{
+                            if(startOffset==0){
+                                startNode = firstElement;
+                                endNode = firstElement;
+                            }else{
+                                startNode = lastElement;
+                                endNode = lastElement;
+                            }
+                        }
+
                         endOffset = (endOffset - startOffset);
                     }
 
