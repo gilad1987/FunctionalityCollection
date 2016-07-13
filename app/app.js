@@ -86,7 +86,7 @@ let toolbarTemplateStateData = {
                 let sizes = [];
                 for(let i=10;i<50;i++){
                     if(i%2==0){
-                        sizes.push(i);
+                        sizes.push( (i+'px') );
                     }
                 }
                 return sizes;
@@ -97,7 +97,7 @@ let toolbarTemplateStateData = {
 
             for(let i=10;i<50;i++){
                 if(i%2==0){
-                    buttons[i] = {
+                    buttons[i+'px'] = {
                         nodeName:'button',
                         elementAttrs:{
                             type:'button',

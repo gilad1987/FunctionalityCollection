@@ -58,33 +58,34 @@ export class GtToolbar  extends GtEditor{
      */
     updateToolBarElements(state, button){
 
-        let wrapperButtonsElement;
+        let parent;
 
         this.updateCurrentStyleByState(state);
 
-        wrapperButtonsElement = this.wrapperElement.querySelectorAll('[data-state-name="'+state.stateName+'"]')[0];
+        parent = this.wrapperElement.querySelectorAll('[data-state-name="'+state.stateName+'"]')[0];
 
-        if(!wrapperButtonsElement){
+        if(!parent){
             return this;
         }
 
-        if(this.hasClass(button,'selection-group')){
-            let activeButtons = wrapperButtonsElement.querySelectorAll('.Button.'+this.classNameButtonActive);
-            // button = wrapperButtonsElement.querySelectorAll('[data-selection-index="'+ state.getCurrentIndex() +'"]')[0];
+        if(this.hasClass(parent,'group')){
+            let activeButtons = parent.querySelectorAll('.Button.'+this.classNameButtonActive);
+            button = button || parent.querySelectorAll('[data-selection-index="'+ state.getCurrentIndex() +'"]')[0];
             this.removeClass(activeButtons,this.classNameButtonActive);
             this.addClass(button,this.classNameButtonActive);
         }
 
-        if(this.hasClass(button,'selection-cycler')){
-            // button = wrapperButtonsElement.getElementsByClassName('Button')[0];
+        if(this.hasClass(parent,'toggle')){
+            button = button|| parent.getElementsByClassName('Button')[0];
             this.toggleClass(button,this.classNameButtonActive);
         }
 
-        if(this.hasClass(button,'selection-item')){
-            let parent = button.closest('.list');
+        if(this.hasClass(parent,'list')){
             let label = parent.querySelectorAll('span.label')[0];
-            label.innerHTML = this.getCurrentStyle(state).value+'px';
-            this.toggleClass(parent,'active');
+            label.innerHTML = this.getCurrentStyle(state).value;
+            if(button){
+                this.toggleClass(parent,'active');
+            }
         }
 
         return this;
@@ -149,7 +150,7 @@ export class GtToolbar  extends GtEditor{
 
                 if(stateData.type=='list'){
                     buttonClasses.push('selection-item');
-                    let opener = this.createNewNode('button', null, ['Button','label','selection-opener'], null, null, stateData.label+': '+'<span class="label">'+stateData.style.values[0]+'px</span>');
+                    let opener = this.createNewNode('button', null, ['Button','label','selection-opener'], null, null, stateData.label+': '+'<span class="label">'+stateData.style.values[0]+'</span>');
                     toolbarSelectionElement.appendChild(opener);
                 }
 
@@ -158,9 +159,6 @@ export class GtToolbar  extends GtEditor{
                 for(buttonConfig in buttonsConfig){
                     currentButtonConfig = buttonsConfig[buttonConfig];
                     li = this.createNewNode('li');
-                    if(stateData.type=='list'){
-                        buttonConfig = parseInt(buttonConfig);
-                    }
                     selectionIndex = stateData.style.values.indexOf(buttonConfig);
                     buttonElement = this.createNewNode(currentButtonConfig.nodeName, null, buttonClasses, null, {'selectionIndex':selectionIndex}, currentButtonConfig.icon, currentButtonConfig.elementAttrs);
 
