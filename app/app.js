@@ -84,7 +84,7 @@ let toolbarTemplateStateData = {
             key: "font-size",
             values: (function(){
                 let sizes = [];
-                for(let i=10;i<50;i++){
+                for(let i=10;i<32;i++){
                     if(i%2==0){
                         sizes.push( (i+'px') );
                     }
@@ -95,7 +95,7 @@ let toolbarTemplateStateData = {
         buttons: (function(){
           let buttons = {};
 
-            for(let i=10;i<50;i++){
+            for(let i=10;i<32;i++){
                 if(i%2==0){
                     buttons[i+'px'] = {
                         nodeName:'button',

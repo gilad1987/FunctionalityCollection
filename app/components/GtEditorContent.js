@@ -215,9 +215,13 @@ export class GtEditorContent extends GtEditor{
         }
 
         if(this.isStyleChanged){
+            let wordwrapper;
             let {firstElement, lastElement} = this.splitText(startNode,0,endOffset);
+            wordwrapper = firstElement;
             this.cloneStyle(firstElement,lastElement);
-            let wordwrapper = this.createNewWordwrapperElement();
+            if(firstElement!==lastElement){
+                wordwrapper = this.createNewWordwrapperElement();
+            }
             this.setStyleWordwrapper(wordwrapper);
             this.insertAfter(wordwrapper, firstElement);
             this.gtSelection.updateRange(wordwrapper.firstChild,null,0,1);
