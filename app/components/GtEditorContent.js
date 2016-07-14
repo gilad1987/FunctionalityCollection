@@ -187,6 +187,14 @@ export class GtEditorContent extends GtEditor{
             }
 
             nextElement = lastElement;
+            let elementLength = (nextElement.firstChild.length==endOffset);
+            startOffset = endOffset = 0;
+            if(elementLength){
+                nextElement = lastElement = nextElement.nextElementSibling || this.cloneStyle( firstElement, this.createNewWordwrapperElement() );
+            }
+
+
+
             do{
                 currentElement = nextElement;
                 nextElement = currentElement.nextElementSibling;
@@ -199,7 +207,7 @@ export class GtEditorContent extends GtEditor{
                 lastElement.innerText = "\u200B";
             }
 
-
+            // endOffset = lastElement.innerText == "\u200B" ? 1 : 0;
 
             newlineElement = this.createNewLine();
             this.setStyleToLine(newlineElement);
@@ -209,7 +217,7 @@ export class GtEditorContent extends GtEditor{
             if(startNodeLineElement.childNodes.length == 0){
                 startNodeLineElement.appendChild( this.cloneStyle( firstElement, this.createNewWordwrapperElement() ) );
             }
-            this.gtSelection.updateRange(lastElement);
+            this.gtSelection.updateRange(lastElement.firstChild,lastElement.firstChild,startOffset,endOffset);
 
             this.isStyleChanged = false;
         }
@@ -218,11 +226,13 @@ export class GtEditorContent extends GtEditor{
             let wordwrapper;
             let {firstElement, lastElement} = this.splitText(startNode,0,endOffset);
             wordwrapper = firstElement;
-            this.cloneStyle(firstElement,lastElement);
-            if(firstElement!==lastElement){
-                wordwrapper = this.createNewWordwrapperElement();
-            }
+
+            // if(firstElement!==lastElement){
+            wordwrapper = this.createNewWordwrapperElement();
+            // }
+
             this.setStyleWordwrapper(wordwrapper);
+            this.cloneStyle(firstElement,lastElement);
             this.insertAfter(wordwrapper, firstElement);
             this.gtSelection.updateRange(wordwrapper.firstChild,null,0,1);
         }
