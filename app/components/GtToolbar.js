@@ -217,6 +217,11 @@ export class GtToolbar  extends GtEditor{
             return false;
         }
 
+        if(this.hasClass(button,'selection-opener')){
+            this.toggleClass(parent,'active');
+            return;
+        }
+
         if(this.hasClass(button,'selection-cycler')){
             newIndex = state.getCurrentIndex() + 1;
             if(newIndex > stateData.style.values.length-1){
@@ -226,11 +231,6 @@ export class GtToolbar  extends GtEditor{
 
         if(this.hasClass(button,'selection-group')){
             newIndex = button.dataset['selectionIndex'];
-        }
-
-        if(this.hasClass(button,'selection-opener')){
-            this.toggleClass(parent,'active');
-            return;
         }
 
         if(this.hasClass(button,'selection-item')){

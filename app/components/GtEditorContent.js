@@ -30,7 +30,6 @@ export class GtEditorContent extends GtEditor{
          * @type {GtSelection}
          */
         this.gtSelection = new GtSelection();
-        this.gtSelection.on('preventSelectionChange',()=>{});
 
         if(this.wrapperElement){
             this.render(this.wrapperElement);
@@ -45,7 +44,6 @@ export class GtEditorContent extends GtEditor{
     render(editorParentElement,text){
         this.wrapperElement = editorParentElement;
         this.editorContentElement = this.createNewNode('div', null, 'content', null, null, null, {"contenteditable":true});
-        let frag = document.createDocumentFragment();
 
         this.editorContentElement.addEventListener('keydown',(event) => {
             this.onKeyUp(event);
@@ -68,8 +66,7 @@ export class GtEditorContent extends GtEditor{
             this.editorContentElement.innerHTML = text;
         }
 
-        frag.appendChild(this.editorContentElement);
-        this.wrapperElement.appendChild(frag);
+        this.wrapperElement.appendChild(this.editorContentElement);
 
 
         // this.editorContentElement.innerHTML = '<p style="text-align: left;"><span style="font-weight: 300;">moshe</span><span style="font-weight: 300; text-decoration: underline;">​gilad</span><span style="font-weight: 700; text-decoration: underline;">​takoni</span></p><p style="text-align: left;"><span style="font-weight: 700; text-decoration: underline;">jermi</span><span style="font-weight: 700;">​as</span></p><p style="text-align: left;"><span style="font-weight: 700;">chanie</span><span style="font-weight: 300;">​edri</span></p><ul><li><ul><li><span style="font-weight: 300;">asd</span><span style="font-weight: 700;">​ariel</span></li></ul></li></ul> <p style="text-align: left;"><span style="font-weight: 700;">gilad</span><span style="font-weight: 700; text-decoration: underline;">​takoni</span></p><p style="text-align: left;"><span style="font-weight: 700; text-decoration: underline;">sara</span><span style="font-weight: 300; text-decoration: underline;">​blumental</span><span style="font-weight: 300;">​alexmayler</span><span style="font-weight: 300;">​</span></p>';
@@ -155,8 +152,9 @@ export class GtEditorContent extends GtEditor{
             lineElement.appendChild(wordwrapper);
             this.editorContentElement.appendChild(lineElement);
             this.setStyleToLine(lineElement);
-            this.gtSelection.addRange(wordwrapper);
+            this.gtSelection.updateRange(wordwrapper,wordwrapper,0,1);
             this.editorContentElementInit = true;
+            this.isStyleChanged = false;
             return;
         }
 
