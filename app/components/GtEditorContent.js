@@ -62,16 +62,16 @@ export class GtEditorContent extends GtEditor{
             this.onSelectionchange(event);
         });
 
+
+        // this.editorContentElement.innerHTML = '<p style="text-align: left;"><span style="font-weight: 300;">moshe</span><span style="font-weight: 300; text-decoration: underline;">​gilad</span><span style="font-weight: 700; text-decoration: underline;">​takoni</span></p><p style="text-align: left;"><span style="font-weight: 700; text-decoration: underline;">jermi</span><span style="font-weight: 700;">​as</span></p><p style="text-align: left;"><span style="font-weight: 700;">chanie</span><span style="font-weight: 300;">​edri</span></p><ul><li><ul><li><span style="font-weight: 300;">asd</span><span style="font-weight: 700;">​ariel</span></li></ul></li></ul> <p style="text-align: left;"><span style="font-weight: 700;">gilad</span><span style="font-weight: 700; text-decoration: underline;">​takoni</span></p><p style="text-align: left;"><span style="font-weight: 700; text-decoration: underline;">sara</span><span style="font-weight: 300; text-decoration: underline;">​blumental</span><span style="font-weight: 300;">​alexmayler</span><span style="font-weight: 300;">​</span></p>';
+        // this.editorContentElement.innerHTML = '<p style="text-align: left;"><span style="font-weight: 300;">Join the Israel JCC for a special Yom Ha\'atzmaut screening of Mekonen: the Journey of an African Jew: DATE: May 9, 2016 TIME: 8:00 PM LOCATION: 67 Independence Lane RSVP: Binyamin N – Israeljcc@gmail.com</span></p>';
+        // this.editorContentElement.innerHTML = '<p style="text-align: center;"><span style="font-weight: 300;">Join the Israel JCC for a special Yom Ha\'atzmaut </span></p><p style="text-align: center;"><span style="font-weight: 300;">screening of </span><span style="font-weight: 700;">Mekonen: the Journey of an African Jew:</span><span style="font-weight: 300;"> </span></p><p style="text-align: left;"><span style="font-weight: 700;">DATE</span><span style="font-weight: 300;">: May 9, 2016 </span></p><p style="text-align: left;"><span style="font-weight: 700;">TIME</span><span style="font-weight: 300;">: 8:00 PM </span></p><p style="text-align: left;"><span style="font-weight: 700;">LOCATION</span><span style="font-weight: 300;">: 67 Independence Lane </span></p><p style="text-align: left;"><span style="font-weight: 700;">RSVP</span><span style="font-weight: 300;">: Binyamin N – Israeljcc@gmail.com</span></p>';
+
         if(text){
             this.editorContentElement.innerHTML = text;
         }
 
         this.wrapperElement.appendChild(this.editorContentElement);
-
-
-        // this.editorContentElement.innerHTML = '<p style="text-align: left;"><span style="font-weight: 300;">moshe</span><span style="font-weight: 300; text-decoration: underline;">​gilad</span><span style="font-weight: 700; text-decoration: underline;">​takoni</span></p><p style="text-align: left;"><span style="font-weight: 700; text-decoration: underline;">jermi</span><span style="font-weight: 700;">​as</span></p><p style="text-align: left;"><span style="font-weight: 700;">chanie</span><span style="font-weight: 300;">​edri</span></p><ul><li><ul><li><span style="font-weight: 300;">asd</span><span style="font-weight: 700;">​ariel</span></li></ul></li></ul> <p style="text-align: left;"><span style="font-weight: 700;">gilad</span><span style="font-weight: 700; text-decoration: underline;">​takoni</span></p><p style="text-align: left;"><span style="font-weight: 700; text-decoration: underline;">sara</span><span style="font-weight: 300; text-decoration: underline;">​blumental</span><span style="font-weight: 300;">​alexmayler</span><span style="font-weight: 300;">​</span></p>';
-        // this.editorContentElement.innerHTML = '<p style="text-align: left;"><span style="font-weight: 300;">Join the Israel JCC for a special Yom Ha\'atzmaut screening of Mekonen: the Journey of an African Jew: DATE: May 9, 2016 TIME: 8:00 PM LOCATION: 67 Independence Lane RSVP: Binyamin N – Israeljcc@gmail.com</span></p>';
-        // this.editorContentElement.innerHTML = '<p style="text-align: center;"><span style="font-weight: 300;">Join the Israel JCC for a special Yom Ha\'atzmaut </span></p><p style="text-align: center;"><span style="font-weight: 300;">screening of </span><span style="font-weight: 700;">Mekonen: the Journey of an African Jew:</span><span style="font-weight: 300;"> </span></p><p style="text-align: left;"><span style="font-weight: 700;">DATE</span><span style="font-weight: 300;">: May 9, 2016 </span></p><p style="text-align: left;"><span style="font-weight: 700;">TIME</span><span style="font-weight: 300;">: 8:00 PM </span></p><p style="text-align: left;"><span style="font-weight: 700;">LOCATION</span><span style="font-weight: 300;">: 67 Independence Lane </span></p><p style="text-align: left;"><span style="font-weight: 700;">RSVP</span><span style="font-weight: 300;">: Binyamin N – Israeljcc@gmail.com</span></p>';
         return this;
     }
 
@@ -90,17 +90,27 @@ export class GtEditorContent extends GtEditor{
         }
 
         let stylesNotEqual = this.compareCurrentStyle(startNode);
+        let state,
+            button;
 
         if(length = stylesNotEqual.length){
             for(;i<length;i++){
                 currentStyleToUpdate = stylesNotEqual[i];
-                stateData = this.getStateData(currentStyleToUpdate.state);
+                state = currentStyleToUpdate.state;
+                stateData = this.getStateData(state);
                 newIndex = stateData.style.values.indexOf(currentStyleToUpdate.nodeStyleValue);
-                currentStyleToUpdate.state.setCurrentIndex(newIndex);
-                currentStyleToUpdate.state.action('editor:updateStateByCurrentNode');
+                // button = this.getStateButton(state);
+                state.setCurrentIndex(newIndex);
+                state.action('editor:updateStateByCurrentNode',button);
             }
         }
+    }
 
+    getStateButton(state){
+        let wrapper = document.querySelector('[data-state-name="'+state.stateName+'"]');
+        let s = '[data-selection-index="'+state.getCurrentIndex()+'"]';
+
+        return wrapper && wrapper.querySelector(s);
     }
 
     checkIfSplitRequired(event){
@@ -221,17 +231,21 @@ export class GtEditorContent extends GtEditor{
         }
 
         if(this.isStyleChanged){
-            let wordwrapper;
-            let {firstElement, lastElement} = this.splitText(startNode,0,endOffset);
-            wordwrapper = firstElement;
+            let wordwrapper,
+                line,
+                {firstElement, lastElement} = this.splitText(startNode,0,endOffset);
 
-            // if(firstElement!==lastElement){
             wordwrapper = this.createNewWordwrapperElement();
-            // }
 
             this.setStyleWordwrapper(wordwrapper);
             this.cloneStyle(firstElement,lastElement);
-            this.insertAfter(wordwrapper, firstElement);
+
+            if(endOffset==0){
+                line = this.getLineElement(firstElement);
+                line.insertBefore(wordwrapper,firstElement);
+            }else{
+                this.insertAfter(wordwrapper, firstElement);
+            }
             this.gtSelection.updateRange(wordwrapper.firstChild,null,0,1);
         }
 
@@ -376,7 +390,7 @@ export class GtEditorContent extends GtEditor{
                     endNode = this.splitText(endNode, 0, endOffset, true)['firstElement'];
                     restoreRange = (startNode!==endNode);
 
-                    elementsToApplyStyle = this.getAllNodes(startNode, endNode);
+                    elementsToApplyStyle = this.getAllNodes(startNode, endNode, 'SPAN');
 
                 }
 

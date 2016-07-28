@@ -27,38 +27,83 @@
 
     .content{
       resize: both;
-      width:100%;
-      overflow: auto;
       display: block;
       min-width: 200px;
       min-height: 50px;
     }
   }
 
-  .ToolBar{
-    background-color: #F0F0F0;
+  .content{
+    width: 100%;
+    overflow: hidden;
+    border:1px solid transparent;
     padding: 10px;
+  }
+
+  &:not(.active) .content:hover{
+    border-color:#1486cc;
+  }
+
+  .ToolBar{
+    background-color: #f3f5fa;
+    padding: 10px 10px 1px;
     margin-left: 0px;
-    border: 1px solid #EEE;
+    border: 1px solid #f3f5fa;
     opacity:0;
-    //overflow: hidden;
+    text-align: left;
 
     .ButtonGroup{
-      //overflow: hidden;
-      //float: left;
-      margin-right:5px;
+      margin:0 5px;
+      height: 31px;
+      display: inline-block;
 
       &:first-child,&:last-child{
         margin:0;
       }
 
       .gt-toolbar-selection-wrapper:first-child {
+        &.list .Button{
+          border-top-left-radius:2px;
+          border-bottom-left-radius:2px;
+        }
 
         ul {
           li:first-child {
             .Button{
-              border-top-left-radius:3px;
-              border-bottom-left-radius:3px;
+              border-top-left-radius:2px;
+              border-bottom-left-radius:2px;
+            }
+          }
+        }
+      }
+
+      .gt-toolbar-selection-wrapper:last-child {
+
+        &.list{
+          &.active{
+            .Button{
+              border-bottom-left-radius:0;
+            }
+          }
+          ul{
+            .Button{
+              border-radius: 0 !important;
+            }
+          }
+
+          .Button{
+            border-right-width: 1px;
+            border-top-right-radius:2px;
+            border-bottom-right-radius:2px;
+          }
+        }
+
+        ul {
+          li:last-child {
+            .Button{
+              border-right-width: 1px;
+              border-top-right-radius:2px;
+              border-bottom-right-radius:2px;
             }
           }
         }
@@ -84,9 +129,10 @@
             display:none;
             position: absolute;
             top:28px;
-            width:100%;
+            width: 100%;
             max-height: 150px;
             overflow-x: scroll;
+            z-index:10;
             border-bottom: 1px solid #adadad;
 
             li{
@@ -117,6 +163,9 @@
           .Button.label{
             width:auto;
             text-transform: none;
+            .label{
+              padding:0 10px;
+            }
           }
 
 
@@ -124,18 +173,32 @@
         }
       }
 
-      .gt-toolbar-selection-wrapper:last-child {
-        float: none;
-        overflow: hidden;
 
-        ul {
-          li:last-child {
-            .Button{
-              border-right-width: 1px;
-              border-top-right-radius:3px;
-              border-bottom-right-radius:3px;
+
+      .list{
+        .Button{
+          padding: 0;
+          span{
+            line-height: 26px;
+            width: auto;
+            &.arrow{
+              border-left:1px solid #adadad;
+              padding:0 7px;
             }
           }
+        }
+      }
+
+      .active{
+        .Button{
+          .arrow{
+            .icon{
+              border-bottom-color: #0e0e0e;
+              border-top-color: transparent;
+              top: -4px;
+            }
+          }
+
         }
       }
 
@@ -148,10 +211,28 @@
         background-color: #fff;
         padding: 3px 6px;
         cursor:pointer;
-        font-size:16px;
+        font-size:15px;
         width:30px;
         transition: none;
         line-height: 20px;
+
+        span{
+          float: left;
+          width: 100%;
+
+        }
+        .arrow{
+          .icon{
+            border: 3px solid #0e0e0e;
+            display: inline-block;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            float: none;
+            position: relative;
+            top: -1px;
+          }
+        }
 
         &:hover{
           background-color: #ebebeb;

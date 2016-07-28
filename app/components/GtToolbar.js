@@ -59,7 +59,6 @@ export class GtToolbar  extends GtEditor{
     updateToolBarElements(state, button){
 
         let parent;
-
         this.updateCurrentStyleByState(state);
 
         parent = this.wrapperElement.querySelectorAll('[data-state-name="'+state.stateName+'"]')[0];
@@ -82,7 +81,11 @@ export class GtToolbar  extends GtEditor{
 
         if(this.hasClass(parent,'list')){
             let label = parent.querySelectorAll('span.label')[0];
-            label.innerHTML = this.getCurrentStyle(state).value;
+
+            label.innerHTML = button ?
+                button.innerHTML :
+                this.getCurrentStyle(state).value;
+
             if(button){
                 this.toggleClass(parent,'active');
             }
@@ -100,13 +103,33 @@ export class GtToolbar  extends GtEditor{
 
         this.wrapperElement = editorParentElement;
 
-        let group = this.createNewNode('div',null,'ButtonGroup'),
-            toolbarElement = this.createNewNode('div',null,'ToolBar'),
-            frag = document.createDocumentFragment(),
-            states = this.getStates(),
-            stateName;
+        let group,
+            len,
+            currentStatesGroup,
+            i=0,
+            toolbarElement = this.createNewNode('div',null,'ToolBar');
 
-        //#TODO implement for groupStates
+        groupStates = groupStates ? groupStates : [ this.getStates() ];
+
+        len = groupStates.length;
+        for(;i<len;i++){
+            currentStatesGroup = groupStates[i];
+            group = this.renderStates(currentStatesGroup);
+            toolbarElement.appendChild(group);
+        }
+
+       this.wrapperElement.addEventListener('click',(event) => {
+            this.onToolbarSelectionClick(event);
+        });
+
+        this.wrapperElement.appendChild(toolbarElement);
+        return this;
+    }
+
+    renderStates(states){
+        let stateName,
+            group = this.createNewNode('div',null,'ButtonGroup');
+
         for(stateName in states){
             if( states.hasOwnProperty(stateName) ){
 
@@ -131,7 +154,7 @@ export class GtToolbar  extends GtEditor{
                 wrapperSelectionsClasses.push('gt-toolbar-selection-wrapper');
 
                 if(!stateData){
-                    throw new Error('Invalid template state data for: '+stateName);
+                    throw new Error('Invalid template state data for: '+ stateName);
                 }
 
                 buttonsConfig = stateData.buttons;
@@ -140,7 +163,6 @@ export class GtToolbar  extends GtEditor{
                 toolbarSelectionElement = this.createNewNode('div',null,wrapperSelectionsClasses,null,{'stateName':state.stateName});
 
                 if(stateData.type=='group'){
-
                     buttonClasses.push('selection-group');
                 }
 
@@ -150,7 +172,9 @@ export class GtToolbar  extends GtEditor{
 
                 if(stateData.type=='list'){
                     buttonClasses.push('selection-item');
-                    let opener = this.createNewNode('button', null, ['Button','label','selection-opener'], null, null, stateData.label+': '+'<span class="label">'+stateData.style.values[0]+'</span>');
+                    let opener = this.createNewNode('button', null, ['Button','label','selection-opener'], null, null, '<span class="label">'+stateData.label+'</span>');
+                    let arrow = this.createNewNode('span',null,'arrow',null,null,'<span class="icon"></span>');
+                    opener.appendChild(arrow);
                     toolbarSelectionElement.appendChild(opener);
                 }
 
@@ -173,17 +197,7 @@ export class GtToolbar  extends GtEditor{
             }
         }
 
-        this.wrapperElement.addEventListener('click',(event) => {
-            this.onToolbarSelectionClick(event);
-        });
-
-
-        toolbarElement.appendChild(group);
-        frag.appendChild(toolbarElement);
-        this.wrapperElement.appendChild(frag);
-
-
-        return this;
+        return group;
     }
 
     onToolbarSelectionClick(event){

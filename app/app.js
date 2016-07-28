@@ -11,8 +11,30 @@ let states = [
     new GtState('text-decoration',true),
     new GtState('font-style',true),
     new GtState('font-size',true),
-    new GtState('text-align',true)
+    new GtState('text-align',true),
+    new GtState('color',true),
 ];
+
+
+let statesGroup = [];
+
+statesGroup.push({
+    'color': states[5],
+});
+
+statesGroup.push({
+    'font-weight': states[0],
+    'text-decoration': states[1],
+    'font-style': states[2],
+});
+
+statesGroup.push({
+    'font-size': states[3],
+});
+
+statesGroup.push({
+    'text-align': states[4],
+});
 
 let toolbarTemplateStateData = {
 
@@ -84,7 +106,7 @@ let toolbarTemplateStateData = {
             key: "font-size",
             values: (function(){
                 let sizes = [];
-                for(let i=10;i<32;i++){
+                for(let i=10;i<50;i++){
                     if(i%2==0){
                         sizes.push( (i+'px') );
                     }
@@ -93,9 +115,9 @@ let toolbarTemplateStateData = {
             })()
         },
         buttons: (function(){
-          let buttons = {};
+            let buttons = {};
 
-            for(let i=10;i<32;i++){
+            for(let i=10;i<50;i++){
                 if(i%2==0){
                     buttons[i+'px'] = {
                         nodeName:'button',
@@ -104,7 +126,7 @@ let toolbarTemplateStateData = {
                             title:'font-size: '+i+'px'
                         },
 
-                        icon:i
+                        icon:i+'px'
                     };
                 }
             }
@@ -114,8 +136,63 @@ let toolbarTemplateStateData = {
 
     },
 
+    'color':{
+        type:'list', // options --> toggle / group / list
+        label:'color',
+        style: {
+            key: "color",
+            values: (function(){
+                let values = [];
+
+                ['#2088ca','#184f9a','#222222','#444444','#fd6d2a'].forEach(function(hex){
+
+                    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                    result = result ? {
+                        r: parseInt(result[1], 16),
+                        g: parseInt(result[2], 16),
+                        b: parseInt(result[3], 16)
+                    } : null;
+
+                    values.push( 'rgb('+result['r']+', '+result['g']+', '+result['b']+')' );
+                });
+
+                return values;
+            })()
+        },
+        buttons: (function(){
+            let buttons = {};
+            ['#2088ca','#184f9a','#222222','#444444','#fd6d2a'].forEach(function(hex,index){
+
+                let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                let rgb;
+
+                result = result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+
+                rgb = 'rgb('+result['r']+', '+result['g']+', '+result['b']+')';
+
+                buttons[rgb] = {
+                    nodeName:'button',
+                    elementAttrs:{
+                        type:'button',
+                        title:'color: '+hex
+                    },
+
+                    icon:'<span class="color" style="color: '+rgb+'">A</span>'
+                }
+            });
+
+            return buttons;
+        })()
+
+    },
+
     'text-align':{
         type:'group', // options --> toggle / group / list
+        label:'align',
         style: {
             key: "text-align",
             values: ['left', 'right','center','justify']
@@ -197,7 +274,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     let wrapper1 = document.getElementById('GtTextEditor1');
     let wrapper2 = document.getElementById('GtTextEditor2');
 
-    toolbar.render(editorParentElement);
+    toolbar.render(editorParentElement,statesGroup);
     editor.render(editorParentElement);
 
 
