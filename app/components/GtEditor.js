@@ -1,5 +1,9 @@
 import {GtDomUtil} from "./GtDomUtil";
 
+/**
+ * @date 8.7.2016
+ * @author Gilad Takoni
+ */
 export class GtEditor extends GtDomUtil{
     
     constructor(){
@@ -29,10 +33,6 @@ export class GtEditor extends GtDomUtil{
 
     }
 
-    getStateData(state){
-        return this.templateStateData[stateName];
-    }
-    
     setStates(functionalityCollection){
         this.functionalityCollection = functionalityCollection;
         this.subscribeToStates();
