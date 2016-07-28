@@ -38,6 +38,7 @@
     overflow: hidden;
     border:1px solid transparent;
     padding: 10px;
+    box-sizing: border-box;
   }
 
   &:not(.active) .content:hover{

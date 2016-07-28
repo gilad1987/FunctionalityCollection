@@ -18,7 +18,7 @@ export class GtSelection extends GtDomUtil{
 
     /**
      * @param {Range} [range]
-     * @returns {{startNode: Node, endNode: Node}}
+     * @returns {{startNode: Element, endNode: Element}}
      */
     getCursorInfo(range){
         

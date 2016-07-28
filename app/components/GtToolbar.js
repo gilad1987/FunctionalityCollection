@@ -38,15 +38,19 @@ export class GtToolbar  extends GtEditor{
      * @desc Call when state's status changed.
      * @param {GtState} state
      * @param {string} eventName
+     * @param {Element} [button]
      * @returns {GtToolbar}
      */
     onStateChange(state, eventName, button){
 
+        let closeList = false;
+
         if(eventName == 'toolbar:stateValueChange'){ // && startNode == endNode && endOffset - startOffset == 0
+            closeList = true;
             this.gtSelection.restoreSelection( this.gtSelection.getCurrentRange() );
         }
 
-        this.updateToolBarElements(state, button);
+        this.updateToolBarElements(state, button, closeList);
 
         return this;
     }
@@ -54,9 +58,11 @@ export class GtToolbar  extends GtEditor{
     /**
      * @desc Update Element after state's status changed.
      * @param {GtState} state
+     * @param {Element} [button]
+     * @param {Boolean} [closeList]
      * @returns {GtToolbar}
      */
-    updateToolBarElements(state, button){
+    updateToolBarElements(state, button, closeList){
 
         let parent;
         this.updateCurrentStyleByState(state);
@@ -86,7 +92,7 @@ export class GtToolbar  extends GtEditor{
                 button.innerHTML :
                 this.getCurrentStyle(state).value;
 
-            if(button){
+            if(button && closeList){
                 this.toggleClass(parent,'active');
             }
         }

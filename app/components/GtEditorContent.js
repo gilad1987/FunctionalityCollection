@@ -46,10 +46,9 @@ export class GtEditorContent extends GtEditor{
         this.editorContentElement = this.createNewNode('div', null, 'content', null, null, null, {"contenteditable":true});
 
         this.editorContentElement.addEventListener('keydown',(event) => {
-            this.onKeyUp(event);
+            this.onKeydown(event);
         });
 
-        let selection = new GtSelection();
         document.addEventListener('selectionchange',(event) => {
             let {startNode} = this.gtSelection.getCursorInfo();
             if(startNode==null){
@@ -83,7 +82,11 @@ export class GtEditorContent extends GtEditor{
         }
 
         let {startNode} = this.gtSelection.getCursorInfo(),
-            stateData, newIndex, length, i = 0,currentStyleToUpdate;
+            stateData,
+            newIndex,
+            length,
+            i = 0,
+            currentStyleToUpdate;
 
         if(startNode.nodeName != 'SPAN'){
             return;
@@ -93,16 +96,16 @@ export class GtEditorContent extends GtEditor{
         let state,
             button;
 
-        if(length = stylesNotEqual.length){
-            for(;i<length;i++){
-                currentStyleToUpdate = stylesNotEqual[i];
-                state = currentStyleToUpdate.state;
-                stateData = this.getStateData(state);
-                newIndex = stateData.style.values.indexOf(currentStyleToUpdate.nodeStyleValue);
-                // button = this.getStateButton(state);
-                state.setCurrentIndex(newIndex);
-                state.action('editor:updateStateByCurrentNode',button);
-            }
+        length = stylesNotEqual.length;
+
+        for(;i<length;i++){
+            currentStyleToUpdate = stylesNotEqual[i];
+            state = currentStyleToUpdate.state;
+            stateData = this.getStateData(state);
+            newIndex = stateData.style.values.indexOf(currentStyleToUpdate.nodeStyleValue);
+            state.setCurrentIndex(newIndex);
+            button = this.getStateButton(state);
+            state.action('editor:updateStateByCurrentNode',button);
         }
     }
 
@@ -121,7 +124,7 @@ export class GtEditorContent extends GtEditor{
         this.setStyle(lineElement,'text-align',this.currentStyle['text-align'].value);
     }
 
-    onKeyUp(event){
+    onKeydown(event){
 
         //#TODO implement when user press delete and cursor in offset == 0 in wordwrapper element
 

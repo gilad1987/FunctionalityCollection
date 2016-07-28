@@ -13,6 +13,7 @@ let states = [
     new GtState('font-size',true),
     new GtState('text-align',true),
     new GtState('color',true),
+    new GtState('background-color',true),
 ];
 
 
@@ -20,6 +21,7 @@ let statesGroup = [];
 
 statesGroup.push({
     'color': states[5],
+    'background-color': states[6],
 });
 
 statesGroup.push({
@@ -182,6 +184,69 @@ let toolbarTemplateStateData = {
                     },
 
                     icon:'<span class="color" style="color: '+rgb+'">A</span>'
+                }
+            });
+
+            return buttons;
+        })()
+
+    },
+
+    'background-color':{
+        type:'list', // options --> toggle / group / list
+        label:'color',
+        style: {
+            key: "background-color",
+            values: (function(){
+                let values = [];
+
+                ['transparent','#2088ca','#184f9a','#222222','#444444','#fd6d2a'].forEach(function(color){
+
+                    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
+                    result = result ? {
+                        r: parseInt(result[1], 16),
+                        g: parseInt(result[2], 16),
+                        b: parseInt(result[3], 16)
+                    } : null;
+
+                    if(result==null){
+                        values.push(color);
+                    }else{
+                        values.push( 'rgb('+result['r']+', '+result['g']+', '+result['b']+')' );
+                    }
+
+                });
+
+                return values;
+            })()
+        },
+        buttons: (function(){
+            let buttons = {};
+            ['transparent','#2088ca','#184f9a','#222222','#444444','#fd6d2a'].forEach(function(color,index){
+
+                let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
+                let rgb;
+
+                result = result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+
+                if(result==null){
+                    rgb = color;
+                }else{
+                    rgb = 'rgb('+result['r']+', '+result['g']+', '+result['b']+')';
+                }
+
+                buttons[rgb] = {
+                    nodeName:'button',
+                    elementAttrs:{
+                        type:'button',
+                        title:'color: '+ rgb
+                    },
+
+                    icon:'<span class="color" style="background-color: '+rgb+'">A</span>'
                 }
             });
 

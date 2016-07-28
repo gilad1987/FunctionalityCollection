@@ -94,7 +94,14 @@ export class GtDomUtil extends GtEvent{
     hasStyle(node,key,value){
         // console.log('hasStyle');
         if(!node) return false;
-        return node.style[key] == value || (value=='' && typeof s == 'undefined');
+        let currentStyle = node.style[key],
+            isEqual = ( currentStyle == value );
+
+        // if(key=='color'){
+        //     console.log(value,currentStyle);
+        //     isEqual = this.isEqualHexToRgb(value, currentStyle);
+        // }
+        return isEqual || (value=='' && typeof currentStyle == 'undefined');
     }
 
     isEqualHexToRgb(hex,rgb){
@@ -106,7 +113,8 @@ export class GtDomUtil extends GtEvent{
             b: parseInt(result[3], 16)
         } : null;
 
-        return result == rgb;
+        if(result == null) return false;
+        return result && ('rgb('+result['r']+', '+result['g']+', '+result['b']+')' == rgb );
 
     }
 
@@ -120,7 +128,6 @@ export class GtDomUtil extends GtEvent{
     setStyle(node,key,value){
         if(!node) return;
 
-        console.log(value);
         node.style[key] = value;
         return this;
     }
@@ -320,7 +327,7 @@ export class GtDomUtil extends GtEvent{
         textLast = nodeTextToSplit.nodeValue.toString().substr(startOffset, endOffset );
         lastElement = this.createNewNode('span',null,null,null,null,textLast);
 
-        // if seprate word and last char is " " (only space)
+        // if separate word and last char is " " (only space)
         // if(lastElement.innerText == " "){
         //     return result;
         // }
@@ -341,7 +348,7 @@ export class GtDomUtil extends GtEvent{
      * @desc Get all nodes between startNode to endNode.
      * @param {Element} startNode
      * @param {Element} endNode
-     * @param {Element.nodeName} [nodeName]
+     * @param {String} [nodeName]
      * @returns {Array}
      */
     getAllNodes(startNode, endNode, nodeName){
