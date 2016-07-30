@@ -1,7 +1,7 @@
 import { GtEvent } from './GtEvent';
 
 /**
- *
+ * @date 8.7.2016
  * @author Gilad Takoni
  */
 export class GtFunctionalityCollection extends GtEvent{
@@ -53,10 +53,9 @@ export class GtFunctionalityCollection extends GtEvent{
     }
 
     isStateOn(actionType){
-        if(actionType && typeof this.states[actionType] == 'undefined'){
-            return false;
-        }
-        return this.states[actionType].isOn();
+        return actionType &&
+            this.states[actionType] &&
+            this.states[actionType].isOn();
     }
     
     addObjection(actionType, reason){}
