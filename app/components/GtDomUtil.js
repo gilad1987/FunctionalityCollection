@@ -348,7 +348,7 @@ export class GtDomUtil extends GtEvent{
      * @desc Get all nodes between startNode to endNode.
      * @param {Element} startNode
      * @param {Element} endNode
-     * @param {String} [nodeName]
+     * @param {String} [nodeName] Add only nodeName to collection
      * @returns {Array}
      */
     getAllNodes(startNode, endNode, nodeName){
