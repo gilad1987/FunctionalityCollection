@@ -204,8 +204,6 @@ export class GtEditorContent extends GtEditor{
                 nextElement = lastElement = nextElement.nextElementSibling || this.cloneStyle( firstElement, this.createNewWordwrapperElement() );
             }
 
-
-
             do{
                 currentElement = nextElement;
                 nextElement = currentElement.nextElementSibling;

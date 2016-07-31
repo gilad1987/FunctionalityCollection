@@ -220,7 +220,15 @@
         span{
           float: left;
           width: 100%;
+        }
 
+        .label{
+          span{
+            line-height: 13px;
+            margin-top: 3px;
+            padding: 4px;
+            text-decoration: underline;
+          }
         }
         .arrow{
           .icon{

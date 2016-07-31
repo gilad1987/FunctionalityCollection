@@ -194,7 +194,7 @@ let toolbarTemplateStateData = {
 
     'background-color':{
         type:'list', // options --> toggle / group / list
-        label:'color',
+        label:'<span class="color" style="background-color: gray; text-decoration: underline">A</span>',
         style: {
             key: "background-color",
             values: (function(){
