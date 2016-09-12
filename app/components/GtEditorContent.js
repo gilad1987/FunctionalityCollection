@@ -189,7 +189,7 @@ export class GtEditorContent extends GtEditor{
                 startNodeLineElement,
                 frag = document.createDocumentFragment();
 
-            //#TODO rewrite this part
+            //#TODO refactor this part
 
             startNodeLineElement = this.getLineElement(firstElement);
 
